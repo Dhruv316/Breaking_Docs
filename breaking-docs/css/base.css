@@ -1,0 +1,30 @@
+/* base.css — reset, type, grain, vignette, hazard tape */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:96px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 var(--t-m)/1.55 var(--f-body);min-height:100vh;overflow-x:hidden;
+cursor:var(--cur-shard,url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Cpath d='M3 2l9 4 10 14-8 6L5 14z' fill='%2355D0FF' stroke='%23fff' stroke-width='1.5'/%3E%3Cpath d='M3 2l9 4-3 10z' fill='%23bff0ff'/%3E%3C/svg%3E") 3 2,auto)}
+/* Phase 5: crystal shard everywhere; yellow shard on clickable things; pork-pie hat on the logo (vars set by fx.js) */
+a,button,[role=button],summary,label[for],input[type=radio]+span{cursor:var(--cur-shard-hot,pointer)}
+.logo,.logo *{cursor:var(--cur-hat,var(--cur-shard-hot,pointer))}
+img,svg{display:block;max-width:100%}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;color:var(--head);letter-spacing:-.01em;line-height:1;margin:0}
+p{margin:0;max-width:62ch}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--blue-sky);outline-offset:3px;border-radius:2px}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.mono{font-family:var(--f-mono)}
+.skip{position:absolute;left:12px;top:-100px;z-index:400;background:var(--hazmat);color:var(--heisenberg);font:600 var(--t-m) var(--f-body);padding:0 20px;min-height:48px;display:inline-flex;align-items:center;text-decoration:none;border:3px solid #000}
+.skip:focus{top:12px}
+.wrap{width:min(1180px,100% - 40px);margin-inline:auto}
+/* film grain + vignette (texture var set by assets.js) */
+.grain,.vignette{position:absolute;inset:0;pointer-events:none}
+.grain{background:var(--tex-grain) 0 0/256px;opacity:var(--grain,.11);mix-blend-mode:overlay;z-index:3}
+.vignette{background:radial-gradient(ellipse at var(--vcx,55%) var(--vcy,45%),transparent var(--vin,38%),rgba(0,0,0,var(--vig,.78)) 100%);z-index:3}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:90;background:var(--tex-grain) 0 0/256px;opacity:.07;mix-blend-mode:overlay}
+body[data-page=tool]::after{opacity:.035}   /* keep the dropzone and big button crisp */
+/* hazard tape */
+.tape{height:var(--tape-h);background:var(--tex-hazard,none) 0 0/44px 44px,repeating-linear-gradient(-45deg,var(--hazmat) 0 14px,var(--heisenberg) 14px 28px);
+box-shadow:0 2px 0 #000,0 -2px 0 #000;position:relative;z-index:5}
+.scene{position:absolute;inset:0;overflow:hidden;z-index:0}
+.scene>svg{position:absolute;inset:0;width:100%;height:100%}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}

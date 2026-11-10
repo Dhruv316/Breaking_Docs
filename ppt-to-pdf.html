@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PPT to PDF — Breaking Docs</title>
+<meta name="description" content="Turn your slides into a PDF that holds up. Done in your browser. Pure and private.">
+<meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css">
+<script type="module" src="js/ui.js"></script>
+<script type="module">import {init} from './js/tools/ppt-to-pdf.js';init();</script></head>
+<body>
+<div id="topbar"></div>
+<main>
+<section class="tool tool--office" id="tool" data-scene="office" data-state="idle">
+ <div class="tool-shade"></div>
+ <div class="tool-char tool-char--saul" data-char="saul"></div>
+ <div class="wrap tool-body">
+
+  <header class="tool-title">
+   <div class="tile tool-tile" id="title-tile" aria-hidden="true"></div>
+   <div><h1 data-copy="tools.Pp.name"></h1><p class="tool-promise" data-copy="tools.Pp.promise"></p></div>
+  </header>
+
+  <div data-show="idle filesChosen">
+   <div class="tray" id="tray">
+    <div class="tray-in">
+     <span class="tray-barrel" id="dz-barrel" aria-hidden="true"></span>
+     <button type="button" class="dz-hit" id="dz-hit" aria-describedby="dz-types">
+      <span class="dz-flask" id="dz-flask" aria-hidden="true"></span>
+      <span class="dz-title" id="dz-label" data-copy="dropzone.idle"></span>
+      <span class="dz-sub" data-copy="dropzone.sub"></span>
+      <span class="dz-types mono" id="dz-types"></span>
+     </button>
+     <div class="pdfcard deckcard" id="deckcard" hidden>
+      <div class="pdf-prev deck-prev is-loading" id="deck-prev"><img alt="" decoding="async"></div>
+      <div class="pdf-meta">
+       <h2 class="pdf-name" id="deck-name"></h2>
+       <p class="pdf-facts mono" id="deck-facts"></p>
+       <button type="button" class="act del" id="deck-rm"><span data-copy="grid.remove"></span></button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+
+  <section class="sheet" data-show="filesChosen" aria-labelledby="sheet-h">
+   <h2 id="sheet-h" class="sheet-h mono" data-copy="opts.title"></h2>
+   <div class="sheet-grid">
+    <fieldset class="optgroup"><legend data-copy="opts.quality"></legend><div class="presets presets--two" id="quality"></div></fieldset>
+    <fieldset class="optgroup"><legend data-copy="opts.numbers"></legend>
+     <div class="seg" id="numbers">
+      <label><input type="radio" name="numbers" value="off" checked><span data-copy="opts.off"></span></label>
+      <label><input type="radio" name="numbers" value="on"><span data-copy="opts.on"></span></label>
+     </div>
+    </fieldset>
+   </div>
+   <p class="fine-note" data-copy="fine.pptNote"></p>
+   <details class="fine"><summary data-copy="fine.link"></summary>
+    <ul><li data-copy="fine.pptNote"></li><li data-copy="fine.pp1"></li><li data-copy="fine.pp2"></li><li data-copy="fine.pp3"></li></ul>
+   </details>
+  </section>
+
+  <div class="go-row" data-show="idle filesChosen"><button type="button" class="btn go" id="go" disabled><span></span></button></div>
+
+  <section class="progress-panel" id="progress" data-show="processing" hidden></section>
+
+  <section class="result" id="result" data-show="done" hidden aria-live="polite"></section>
+
+  <section class="errpanel" data-show="error" hidden aria-live="polite">
+   <div class="err-char" id="err-char" aria-hidden="true"></div>
+   <div class="err-body">
+    <span class="err-prop" id="err-prop" aria-hidden="true"></span>
+    <h2 id="err-msg" tabindex="-1"></h2>
+    <div class="res-actions">
+     <button type="button" class="btn btn-sm" id="err-retry" data-copy="errors.retry"></button>
+     <button type="button" class="btn btn-danger btn-sm" id="err-again" data-copy="result.again"></button>
+    </div>
+   </div>
+  </section>
+
+ </div>
+ <div class="tape tool-tape"></div>
+</section>
+
+<section class="tools more" data-scene="night"><div class="wrap">
+ <h2 data-copy="home.gridHeading"></h2>
+ <div class="grid" data-tiles='{"live":true,"exclude":"Pp"}'></div>
+</div></section>
+</main>
+<footer id="footer"></footer>
+</body></html>

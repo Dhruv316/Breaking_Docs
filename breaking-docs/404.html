@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en" style="background:#02040a"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Breaking Docs</title>
+<script>/* A 404 can be served from any depth, and the site may live at the domain root or in a sub-folder (e.g. /repo/).
+   Find the site root first (cheapest probe first: "/" , then each deeper folder of the current path), point <base> at it,
+   then load CSS + JS, so every relative URL resolves correctly. Opened directly as /404.html it stays local. */
+(function(d){
+ var direct=/\/404\.html$/.test(location.pathname),segs=location.pathname.split('/').filter(Boolean),cands=['/'],acc='/';
+ for(var i=0;i<segs.length;i++){acc+=segs[i]+'/';cands.push(acc);}
+ function boot(base){
+  if(d.readyState==='loading'){d.addEventListener('DOMContentLoaded',function(){boot(base);});return;}   /* ui.js needs the body parsed */
+  if(base){var b=d.createElement('base');b.href=base;d.head.insertBefore(b,d.head.firstChild);}
+  var ic=d.createElement('link');ic.rel='icon';ic.href='assets/favicon.png';d.head.appendChild(ic);
+  ['tokens','base','components','pages'].forEach(function(n){var l=d.createElement('link');l.rel='stylesheet';l.href='css/'+n+'.css';d.head.appendChild(l);});
+  var s=d.createElement('script');s.type='module';s.src='js/ui.js';
+  s.onload=function(){import(new URL('js/copy.js',d.baseURI).href).then(function(m){d.title=m.t('notFound.heading')+' \u2014 '+m.t('brand.name');}).catch(function(){});};
+  d.head.appendChild(s);}
+ function probe(i){
+  if(i>=cands.length)return boot('/');
+  fetch(cands[i]+'js/copy.js').then(function(r){
+   if(r.ok&&/javascript|ecmascript/i.test(r.headers.get('content-type')||''))boot(cands[i]);else probe(i+1);
+  }).catch(function(){probe(i+1);});}
+ if(direct)boot('');else probe(0);
+})(document);</script>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
+</head>
+<body>
+<div id="topbar"></div>
+<main>
+<section class="nf" data-scene="night">
+ <div class="nf-shade"></div>
+ <div class="nf-char" data-char="gus"></div>
+ <div class="wrap nf-body">
+  <div class="tile nf-tile" aria-hidden="true"><span class="num mono">404</span><span class="mass mono">??</span><span class="sym">Nf</span></div>
+  <h1 data-copy="notFound.heading"></h1>
+  <p class="nf-sub" data-copy="notFound.sub"></p>
+  <a class="btn" href="index.html" data-copy="notFound.button"></a>
+ </div>
+ <div class="tape"></div>
+</section>
+</main>
+<footer id="footer"></footer>
+</body></html>

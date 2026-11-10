@@ -1,0 +1,60 @@
+/* grade.css — Round 1, Part A: ONE cinematic treatment so every character photo belongs to the same poster set.
+   Per photo: shared colour grade (js/grade.js) → tight rim light → soft halo (hazmat yellow OR tile green, set per page) → drop shadow,
+   then gradient fade masks on every cropped edge. Placement (size, position) stays in pages.css / components.css.
+   Tune a single photo with these variables:
+   --g-rim / --g-rimw  tight edge light colour / width      --g-glow / --g-halo  soft halo colour / radius
+   --fb --fl --fr --ft  fade length on the bottom / left / right / top edge (default 8 / 8 / 6 / 7%; 0% = hard edge).
+   Every edge fades a little on purpose: the halo is clipped by the mask box, and an un-faded edge would show as a faint rectangle. */
+:root{--g-rim:#F5C400;--g-rimw:1.5px;--g-glow:#F5C40066;--g-halo:44px;--g-green:#37B862;--g-green-glow:#1E7A3Caa}
+
+:is(.hero-char,.tool-char,.nf-char,.res-char,.err-char,.knock-char,.footer .gus,.soon .hank,.cameo-img){
+ filter:url(#bd-grade) drop-shadow(0 0 var(--g-rimw) var(--g-rim)) drop-shadow(0 0 var(--g-halo) var(--g-glow)) drop-shadow(0 14px 16px #0009);
+ -webkit-mask-image:linear-gradient(to top,transparent 0,#000 var(--fb,8%)),linear-gradient(to right,transparent 0,#000 var(--fl,8%)),linear-gradient(to left,transparent 0,#000 var(--fr,6%)),linear-gradient(to bottom,transparent 0,#000 var(--ft,7%));
+ -webkit-mask-composite:source-in;
+ mask-image:linear-gradient(to top,transparent 0,#000 var(--fb,8%)),linear-gradient(to right,transparent 0,#000 var(--fl,8%)),linear-gradient(to left,transparent 0,#000 var(--fr,6%)),linear-gradient(to bottom,transparent 0,#000 var(--ft,7%));
+ mask-composite:intersect}
+
+/* ── per-placement fades + which colour the halo is ── */
+.hero-char{--fl:14%;--fb:9%;--g-rim:#FFD84A;--g-rimw:3px;--g-glow:#E07B2Acc;--g-halo:64px}
+.tool-char{--fl:10%;--fb:38%}
+.tool-char--wide{--fl:16%;--fb:30%}
+.tool-char--saul{--fl:10%;--fb:14%;--g-glow:#A63220aa}
+.tool--lab .tool-char{--g-rim:var(--g-green);--g-glow:var(--g-green-glow);--g-halo:56px}
+.nf-char{--fb:0%;--g-rim:var(--g-green);--g-glow:var(--g-green-glow);--g-halo:36px}
+.res-char{--fl:14%;--fb:8%;--g-rim:var(--g-green);--g-glow:var(--g-green-glow);--g-halo:56px}
+.err-char{--fl:25%;--fb:10%;--g-halo:30px;--g-glow:#A6322088}
+.footer .gus{--fl:10%;--fb:12%;--g-rim:var(--g-green);--g-glow:var(--g-green-glow)}
+.soon .hank{--fl:15%;--fr:15%;--fb:30%;--g-rim:var(--g-green);--g-glow:var(--g-green-glow);--g-halo:24px}
+.cameo-img{--fb:8%;--g-rim:var(--g-green);--g-glow:var(--g-green-glow);--g-halo:16px;--g-rimw:1px}
+.knock-char{--fl:8%;--fb:10%;--g-halo:40px}
+
+/* ── Home hero: the source is only 612x408 and gets enlarged ~2x, so it gets extra care ──
+   softened a hair, film grain and a vignette clipped to the silhouette (they use the photo itself as a mask), strong rim light (see .hero-char above) */
+.char--lowres>img{position:absolute;z-index:0;filter:blur(.55px) contrast(1.04)}
+.char--lowres::before,.char--lowres::after{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+ -webkit-mask-image:var(--src);mask-image:var(--src);-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+ -webkit-mask-size:calc(var(--iw)/var(--w)*100%) calc(var(--ih)/var(--h)*100%);mask-size:calc(var(--iw)/var(--w)*100%) calc(var(--ih)/var(--h)*100%);
+ -webkit-mask-position:calc(var(--x)/(var(--iw) - var(--w))*100%) calc(var(--y)/(var(--ih) - var(--h))*100%);mask-position:calc(var(--x)/(var(--iw) - var(--w))*100%) calc(var(--y)/(var(--ih) - var(--h))*100%)}
+.char--lowres::before{background:var(--tex-grain) 0 0/180px;mix-blend-mode:overlay;opacity:.95}
+.char--lowres::after{background:radial-gradient(ellipse 80% 72% at 50% 38%,transparent 34%,#120602b8 100%)}
+
+/* ── Backgrounds: real photos (bg-*.jpg) laid over the drawn placeholder ── */
+.scene-img{position:absolute;inset:0;z-index:1;width:100%;height:100%;object-fit:cover;object-position:var(--bgx,50%) var(--bgy,50%);filter:var(--bg-f,none);transform:scale(var(--bgz,1));transform-origin:var(--bgo,50% 50%)}
+.scene:has(>.scene-img)>svg{visibility:hidden}            /* the drawn scene only shows if the photo is missing */
+.scene::after{content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:var(--tint,none);mix-blend-mode:var(--tint-m,normal)}
+
+/* Image to PDF — bg-pilot-desert.jpg (1080px wide: never scaled past `cover`).
+   Darkened with a warm tint, softened with a slight blur, extra grain on top; the right 40% (the man and the gun) fades out so
+   the Jesse cutout is the only person on the page and the photo cannot look pixelated or compete with the dropzone. */
+.scene[data-bg=pilot]{--bgx:4%;--bgy:62%;--bg-f:blur(1.4px) saturate(.85) contrast(1.06) brightness(1);--tint:linear-gradient(180deg,#6a320eb0 0%,#7a3c16a0 55%,#2a1408cc 100%);--tint-m:multiply;background:#150a05}
+/* lighter side shade on this page only: the photo is already darkened above, text stays on a >= 60% dark wash */
+.tool:has(.scene[data-bg=pilot])>.tool-shade{background:linear-gradient(90deg,#0a0c0ac2 0%,#0a0c0a8c 50%,#0a0c0a52 100%),linear-gradient(0deg,#0a0c0a 0,transparent 18%)}
+.scene[data-bg=pilot] .grain{opacity:.24}
+@media(min-width:801px){.scene[data-bg=pilot] .scene-img{-webkit-mask-image:linear-gradient(90deg,#000 0,#000 46%,transparent 74%);mask-image:linear-gradient(90deg,#000 0,#000 46%,transparent 74%)}}
+
+/* bg-superlab.jpg — two different crops + grades of the same photo. Both crops stay clear of the man's face (it sits in the top-centre of the
+   photo) so the page never shows two Walters; the framing is done with a zoom (--bgz) around a corner (--bgo), not with extra markup. */
+/* Compress PDF page: lower-right, wide, green-teal grade (yellow suit + cash stacks, dim and out of focus behind the title) */
+.tool--lab>.scene[data-bg=superlab]{--bgx:100%;--bgy:100%;--bgz:1.5;--bgo:100% 100%;--bg-f:blur(.6px) saturate(.9) contrast(1.1) brightness(.7) hue-rotate(-8deg);--tint:linear-gradient(90deg,#03160bd0 0%,#06301a80 60%,#020a05cc 100%);--tint-m:multiply;background:#020a05}
+/* Result screen: top-right, tight, blue "crystal" grade (the lit factory windows and the teal bins) */
+.result .scene[data-bg=superlab]{--bgx:100%;--bgy:0%;--bgz:2.2;--bgo:100% 0%;--bg-f:saturate(1.1) contrast(1.12) brightness(.8) hue-rotate(30deg);--tint:linear-gradient(90deg,#01080ce8 0%,#01080cc0 52%,#01080c70 100%),radial-gradient(ellipse at 30% 45%,#0b3a5a66,#01080ccc 88%);--tint-m:multiply;background:#01080c}

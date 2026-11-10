@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Breaking Docs</title>
+<meta name="description" content="Images, slides, and bloated PDFs. Done in your browser.">
+<meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css">
+<script>(function(){try{var m=matchMedia('(prefers-reduced-motion: reduce)').matches,s=null;try{s=localStorage.getItem('bd.intro.v1')}catch(e){}
+document.documentElement.classList.add('js');if(!m&&!location.hash&&(!s||/[?&]intro\b/.test(location.search)))document.documentElement.classList.add('intro-on')}catch(e){}
+setTimeout(function(){document.documentElement.classList.remove('intro-on')},8000)})()</script>
+<script type="module" src="js/ui.js"></script></head>
+<body>
+<div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-t">
+ <div class="intro-stage"><div class="intro-tiles" aria-hidden="true">
+  <div class="tile" style="--i:0"><span class="num mono">35</span><span class="sym">Br</span></div>
+  <div class="tile" style="--i:1"><span class="num mono">66</span><span class="sym">Dc</span></div></div>
+  <p class="intro-tag" id="intro-t" data-copy="intro.tag"></p></div>
+ <button type="button" class="btn-2 intro-skip" data-copy="intro.skip"></button>
+</div>
+<div id="topbar"></div>
+<main>
+<section class="hero" id="hero" data-scene="sunset">
+ <div class="shade"></div>
+ <div class="hero-char" data-char="heisenberg"></div>
+ <div class="shimmer" aria-hidden="true"></div>
+ <span class="tumble" data-prop="tumbleweed"></span>
+ <div class="wrap hero-copy">
+  <div class="flip" aria-hidden="true">
+   <div class="tile" style="--i:0"><span class="num mono">35</span><span class="sym">Br</span></div>
+   <div class="tile" style="--i:1"><span class="num mono">66</span><span class="sym">Dc</span></div></div>
+  <h1 data-copy="home.heroHeadline" data-el="home.heroElements"></h1>
+  <p class="hero-sub" data-copy="home.heroSub"></p>
+  <a class="btn" href="#tools" data-copy="home.heroButton"></a>
+ </div>
+ <div class="tape"></div>
+</section>
+<section class="tools" id="tools" data-scene="night"><div class="wrap">
+ <h2 data-copy="home.gridHeading"></h2>
+ <div class="grid reveal" data-tiles='{"live":true}'></div>
+ <div class="soon"><div class="hank" data-char="hank"></div>
+  <div><h3 data-copy="home.soonNote"></h3><div class="grid" data-tiles='{"live":false,"soon":true}'></div></div></div>
+</div></section>
+<div class="tape"></div>
+<section class="promise" id="about" data-scene="lab"><div class="wrap"><div class="grid" data-promise></div>
+ <h2 class="cast-h" data-copy="about.heading"></h2>
+ <ul class="cast" data-copy-aria="about.aria">
+  <li class="cameo"><div class="cameo-img" data-char="skyler"></div><p class="cameo-cap mono" data-copy="about.skyler"></p></li>
+  <li class="cameo"><div class="cameo-img" data-char="walterJr"></div><p class="cameo-cap mono" data-copy="about.walterJr"></p></li>
+  <li class="cameo cameo--wide"><div class="cameo-img" data-char="saulAlt"></div><p class="cameo-cap mono" data-copy="about.saul"></p></li>
+ </ul></div></section>
+</main>
+<footer id="footer"></footer>
+</body></html>
