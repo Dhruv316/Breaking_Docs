@@ -5,9 +5,9 @@ const SVG=`<svg id="bd-grade-defs" width="0" height="0" style="position:absolute
 <filter id="bd-grade" x="0" y="0" width="100%" height="100%" color-interpolation-filters="sRGB">
  <feColorMatrix type="saturate" values="1.08"/>
  <feComponentTransfer>
-  <feFuncR type="table" tableValues="0 .21 .52 .79 1"/>
-  <feFuncG type="table" tableValues="0 .165 .475 .755 .985"/>
-  <feFuncB type="table" tableValues="0 .115 .415 .68 .91"/>
+  <feFuncR type="table" tableValues="0 .18 .52 .81 1"/>
+  <feFuncG type="table" tableValues="0 .14 .475 .78 .99"/>
+  <feFuncB type="table" tableValues="0 .09 .41 .70 .92"/>
  </feComponentTransfer>
 </filter></defs></svg>`;
 /** Adds the grade filter to the page once. Call before characters are rendered. */

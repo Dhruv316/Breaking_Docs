@@ -1,29 +1,24 @@
 /* sound.js — Web Audio synthesizer. No audio files.
    OFF by default, never autoplays, and the AudioContext is only created after a user gesture (and only once sound is on).
    Public API (all safe to call at any time, all fail silently): play(name), loopStart(name), loopStop(name), setOn(bool), isOn(),
-   setVolume(0|1|2), getVolume(), setAmbience(bool), isAmbience(), ambienceAllowed(), available(), onChange(fn); also the `sound` object.
-   One-shots: click, drop, success, error, knock, thump, tile + curtain (title-card intro). Loops: bubbling (only while processing), ambience (desert wind, own toggle).
+   setVolume(0|1|2), getVolume(), playIntro(url), stopIntro(), available(), onChange(fn); also the `sound` object.
+   One-shots: click, drop, success, error, knock, thump, tile + curtain (title-card intro). Loops: bubbling (only while processing). Also playIntro(url): the Home title-theme file (fades 600 ms, routed through the same volume/limiter).
    Safety: every voice has a >=4 ms attack and an exponential release, per-voice peaks are <=0.3, the master volume is capped at 1 and
-   everything runs through a hard limiter. Ambience ducks under one-shots. Preferences persist in localStorage (try/catch; blocked = off). */
+   everything runs through a hard limiter. Preferences persist in localStorage (try/catch; blocked = off). */
 import {store} from './ui-kit.js';
 const KEY='bd.sound.v1',STEPS=[.4,.7,1];
-const RMQ=matchMedia('(prefers-reduced-motion: reduce)');
 const AC=typeof window!=='undefined'?(window.AudioContext||window.webkitAudioContext):null;
-let on=false,vol=1,amb=false,gestured=false,dead=!AC;   // vol = index into STEPS
-let ctx=null,master,sfx,ambBus,ambDuck,noise,brown;
+let on=false,vol=1,gestured=false,dead=!AC;   // vol = index into STEPS
+let ctx=null,master,sfx,noise,brown,intro=null;
 const wanted=new Set(),running=new Map(),subs=new Set(),last={};
-try{const p=JSON.parse(store.get(KEY)||'null');if(p&&typeof p==='object'){on=p.on===true;vol=[0,1,2].includes(p.vol)?p.vol:1;amb=p.amb===true;}}catch{}
-if(RMQ.matches)amb=false;
-const save=()=>store.set(KEY,JSON.stringify({on,vol,amb}));
+try{const p=JSON.parse(store.get(KEY)||'null');if(p&&typeof p==='object'){on=p.on===true;vol=[0,1,2].includes(p.vol)?p.vol:1;}}catch{}
+const save=()=>store.set(KEY,JSON.stringify({on,vol}));
 const emit=()=>subs.forEach(f=>{try{f()}catch{}});
 /** @returns {boolean} true when this browser can make sound at all */
 export const available=()=>!dead;
 export const isOn=()=>on;
 export const getVolume=()=>vol;
-export const isAmbience=()=>amb&&!RMQ.matches;
-/** Ambience is never allowed under prefers-reduced-motion. */
-export const ambienceAllowed=()=>!RMQ.matches;
-/** Subscribe to state changes (toggle, volume, ambience). */
+/** Subscribe to state changes (toggle, volume). */
 export const onChange=f=>{subs.add(f);return()=>subs.delete(f);};
 
 /* ---------- graph ---------- */
@@ -37,8 +32,8 @@ function ensure(){if(dead||!gestured)return false;
  try{if(!ctx){ctx=new AC({latencyHint:'interactive'});buildNoise(ctx);
    master=ctx.createGain();master.gain.value=0;
    const lim=ctx.createDynamicsCompressor();lim.threshold.value=-14;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.003;lim.release.value=.12;
-   sfx=ctx.createGain();ambBus=ctx.createGain();ambDuck=ctx.createGain();
-   sfx.connect(master);ambBus.connect(ambDuck);ambDuck.connect(master);const out=ctx.createGain();out.gain.value=.45;   // final trim: the compressor adds make-up gain, this keeps even High well under full scale
+   sfx=ctx.createGain();
+   sfx.connect(master);const out=ctx.createGain();out.gain.value=.45;   // final trim: the compressor adds make-up gain, this keeps even High well under full scale
    master.connect(lim);lim.connect(out);out.connect(ctx.destination);}
   if(ctx.state==='suspended')ctx.resume().catch(()=>{});
   return true;}catch{dead=true;ctx=null;return false;}}
@@ -51,7 +46,6 @@ function tone({type='sine',f0,f1=f0,t=0,a=.006,d=.1,peak=.1,dest=sfx,lp=0}){cons
  let n=o;if(lp){const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=lp;o.connect(f);n=f;}n.connect(g);g.connect(dest);o.start(s);o.stop(s+a+d+.04);}
 function puff({t=0,a=.004,d=.06,peak=.08,freq=600,q=.8,type='bandpass',dest=sfx}){const s=T()+t,src=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
  src.buffer=noise;f.type=type;f.frequency.value=freq;f.Q.value=q;env(g.gain,s,peak,a,d);src.connect(f);f.connect(g);g.connect(dest);src.start(s,Math.random()*1.5);src.stop(s+a+d+.04);}
-function duck(sec){if(!ambDuck||!running.has('ambience'))return;const n=T();ambDuck.gain.cancelScheduledValues(n);ambDuck.gain.setTargetAtTime(.3,n,.03);ambDuck.gain.setTargetAtTime(1,n+sec,.4);}
 
 /* ---------- one-shots ---------- */
 const SFX={
@@ -66,7 +60,7 @@ SFX.curtain=function(){puff({type:'bandpass',freq:520,q:.7,a:.06,d:.5,peak:.07})
 /** Plays a one-shot. No-op when sound is off, not yet allowed, or unsupported. */
 export function play(name){try{if(!on||!SFX[name])return;if(!ensure()||!ready())return;
  const n=performance.now();if(n-(last[name]||0)<45)return;last[name]=n;   // ignore machine-gun repeats
- if(ctx.state==='suspended')return;duck(SFX[name]()+.2);}catch{}}
+ if(ctx.state==='suspended')return;SFX[name]();}catch{}}
 
 /* ---------- loops ---------- */
 function startBubbling(){const g=ctx.createGain();g.gain.value=0;g.connect(sfx);g.gain.setTargetAtTime(1,T(),.15);
@@ -76,28 +70,21 @@ function startBubbling(){const g=ctx.createGain();g.gain.value=0;g.connect(sfx);
    if(Math.random()<.25)tone({f0:110+Math.random()*80,f1:220,a:.008,d:.1,peak:.05,dest:g,lp:600});}}catch{}
   timer=setTimeout(tick,80+Math.random()*240);};tick();
  return()=>{dead2=true;clearTimeout(timer);try{g.gain.setTargetAtTime(0,T(),.1);setTimeout(()=>{try{bed.stop();g.disconnect();}catch{}},700);}catch{}};}
-function startAmbience(){const src=ctx.createBufferSource(),bp=ctx.createBiquadFilter(),g=ctx.createGain();src.buffer=brown;src.loop=true;bp.type='bandpass';bp.frequency.value=480;bp.Q.value=.6;g.gain.value=.0001;
- src.connect(bp);bp.connect(g);g.connect(ambBus);src.start(0,Math.random()*4);
- const w2=ctx.createBufferSource(),hp=ctx.createBiquadFilter(),g2=ctx.createGain();w2.buffer=noise;w2.loop=true;hp.type='bandpass';hp.frequency.value=1500;hp.Q.value=5;g2.gain.value=.002;w2.connect(hp);hp.connect(g2);g2.connect(ambBus);w2.start(0,Math.random());
- const lfo=(rate,depth,param)=>{const o=ctx.createOscillator(),d=ctx.createGain();o.frequency.value=rate;d.gain.value=depth;o.connect(d);d.connect(param);o.start();return o;};
- const l=[lfo(.07,170,bp.frequency),lfo(.11,.035,g.gain),lfo(.05,.0035,g2.gain),lfo(.09,300,hp.frequency)];
- g.gain.setTargetAtTime(.075,T(),1.2);ambDuck.gain.setValueAtTime(1,T());
- return()=>{try{g.gain.cancelScheduledValues(T());g.gain.setTargetAtTime(0,T(),.4);g2.gain.cancelScheduledValues(T());g2.gain.setTargetAtTime(0,T(),.4);
-  setTimeout(()=>{try{src.stop();w2.stop();l.forEach(o=>o.stop());g.disconnect();g2.disconnect();}catch{}},2200);}catch{}};}
-const LOOPS={bubbling:startBubbling,ambience:startAmbience};
-const wantNow=n=>n==='ambience'?(on&&isAmbience()):(on&&wanted.has(n));
+const LOOPS={bubbling:startBubbling};
+const wantNow=n=>on&&wanted.has(n);
 /** Reconciles which loops should be running with which are. */
 function sync(){try{
  if(!ready()){return;}
  const hidden=document.hidden;
- if(master)master.gain.setTargetAtTime(on?STEPS[vol]:0,T(),.06);
+ if(master)master.gain.setTargetAtTime(on?STEPS[vol]:0,T(),(!on&&intro)?.2:.06);
+ if(!on)stopIntro();
  for(const n of Object.keys(LOOPS)){const should=wantNow(n)&&!hidden;
   if(should&&!running.has(n)&&ctx.state!=='closed')running.set(n,LOOPS[n]());
   else if(!should&&running.has(n)){running.get(n)();running.delete(n);}}
  if(hidden||!on){clearTimeout(sync.t);sync.t=setTimeout(()=>{try{if((document.hidden||!on)&&ctx.state==='running')ctx.suspend().catch(()=>{});}catch{}},on?200:900);}
  else{clearTimeout(sync.t);if(ctx.state==='suspended')ctx.resume().catch(()=>{});}}catch{}}
 /** Starts a loop (bubbling while processing). Only audible while sound is on; remembered so turning sound on mid-job joins in. */
-export function loopStart(name){if(!LOOPS[name]||name==='ambience')return;wanted.add(name);if(on&&ensure())sync();}
+export function loopStart(name){if(!LOOPS[name])return;wanted.add(name);if(on&&ensure())sync();}
 /** Stops a loop with a short fade. */
 export function loopStop(name){wanted.delete(name);sync();}
 
@@ -106,13 +93,22 @@ export function loopStop(name){wanted.delete(name);sync();}
 export function setOn(v){on=!!v;if(on){gestured=true;ensure();}save();sync();emit();return on;}
 /** @param {0|1|2} i Low / Medium / High. */
 export function setVolume(i){vol=[0,1,2].includes(i)?i:1;save();sync();emit();return vol;}
-/** Desert-wind ambience. Refused (stays off) under prefers-reduced-motion. */
-export function setAmbience(v){amb=!!v&&!RMQ.matches;save();if(on&&amb){gestured=true;ensure();}sync();emit();return amb;}
-export const sound={play,loopStart,loopStop,setOn,isOn,setVolume,getVolume,setAmbience,isAmbience,ambienceAllowed,available,onChange};
+/** Home title theme (breaking-bad-intro.mp3). Call from a click: turns sound on, plays once through the shared volume + limiter, never overlaps,
+ *  fades ~600 ms on mute / near the end / leaving the page. Silent on any failure or missing file. */
+export function playIntro(url){try{if(intro)return;gestured=true;if(!on){on=true;save();}if(!ensure()||!ready())return;sync();emit();
+ const a=new Audio(url),g=ctx.createGain(),src=ctx.createMediaElementSource(a);g.gain.value=.0001;g.gain.linearRampToValueAtTime(.28,T()+.05);   // .28 <= the loudest one-shot voice (.3)
+ src.connect(g);g.connect(sfx);const me={a,g,src,fading:false};intro=me;
+ const clean=()=>{try{src.disconnect();g.disconnect();}catch{}if(intro===me)intro=null;};
+ a.addEventListener('ended',clean);a.addEventListener('error',clean);
+ a.addEventListener('timeupdate',()=>{if(a.duration&&a.duration-a.currentTime<.65)stopIntro();});
+ const p=a.play();if(p&&p.catch)p.catch(clean);}catch{intro=null;}}
+/** Fades the intro out over ~600 ms. */
+export function stopIntro(){try{const me=intro;if(!me||me.fading)return;me.fading=true;const n=T();me.g.gain.cancelScheduledValues(n);me.g.gain.setValueAtTime(Math.max(me.g.gain.value,.0001),n);me.g.gain.linearRampToValueAtTime(.0001,n+.6);
+ setTimeout(()=>{try{me.a.pause();me.src.disconnect();me.g.disconnect();}catch{}if(intro===me)intro=null;},680);}catch{}}
+export const sound={play,loopStart,loopStop,setOn,isOn,setVolume,getVolume,playIntro,stopIntro,available,onChange};
 
 /* first user gesture unlocks audio; a remembered "on" then becomes audible without another click */
 const arm=()=>{gestured=true;removeEventListener('pointerdown',arm,true);removeEventListener('keydown',arm,true);removeEventListener('touchend',arm,true);removeEventListener('click',arm,true);if(on){ensure();sync();}};
 if(typeof window!=='undefined')['pointerdown','keydown','touchend','click'].forEach(e=>addEventListener(e,arm,{capture:true,passive:true}));
 document.addEventListener('visibilitychange',sync);
-const rmChange=()=>{if(RMQ.matches&&amb){amb=false;save();}sync();emit();};
-RMQ.addEventListener?.('change',rmChange);
+addEventListener('pagehide',stopIntro);

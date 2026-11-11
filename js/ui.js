@@ -40,7 +40,7 @@ function bind(){document.querySelectorAll('[data-copy]').forEach(e=>{const v=t(e
  document.querySelectorAll('[data-copy-aria]').forEach(e=>e.setAttribute('aria-label',t(e.dataset.copyAria)));
  document.querySelectorAll('[data-scene]').forEach(e=>e.insertAdjacentHTML('afterbegin',scene(e.dataset.scene)));
  document.querySelectorAll('[data-char]').forEach(e=>{e.innerHTML=char(e.dataset.char,t('alt.'+e.dataset.char),'',e.matches('.hero-char,.tool-char,.nf-char'));
-  const c=e.firstElementChild;e.classList.add('char');if(e.matches('.hero-char'))e.classList.add('char--lowres');e.style.cssText+=c.getAttribute('style');c.className='';e.replaceChildren(...c.childNodes);});
+  const c=e.firstElementChild;e.classList.add('char','cutout');if(e.matches('.hero-char'))e.classList.add('char--lowres');e.style.cssText+=c.getAttribute('style');c.className='';e.replaceChildren(...c.childNodes);});
  document.querySelectorAll('[data-prop]').forEach(e=>e.innerHTML=prop(e.dataset.prop));
  document.querySelectorAll('[data-tiles]').forEach(e=>renderTiles(e,JSON.parse(e.dataset.tiles)));
  document.querySelectorAll('[data-promise]').forEach(e=>{e.innerHTML=COPY.home.promises.map((p,i)=>{const [a,b]=p.split(' — ');

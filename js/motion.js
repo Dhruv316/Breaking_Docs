@@ -22,4 +22,9 @@ function fallbackFade(){if(reducedMotion||!root.classList.contains('pg-fb'))retu
  });
  addEventListener('pageshow',()=>root.classList.remove('pg-leave'));}
 /** Wires file-card entrances and the page-transition fallback. Safe to call on every page. */
-export function initMotion(){cards();fallbackFade();}
+/** Compress PDF scene parallax: pointer position -> --px/--py (-1..1) on the section; CSS applies `translate` only. Off on touch / reduced motion. */
+function parallax(){const t=document.querySelector('.tool--lab,.tool:has(.scene[data-bg=pilot])');
+ if(!t||reducedMotion||matchMedia('(hover:none)').matches)return;let r=0;
+ addEventListener('pointermove',e=>{if(r)return;r=requestAnimationFrame(()=>{r=0;
+  t.style.setProperty('--px',((e.clientX/innerWidth)*2-1).toFixed(3));t.style.setProperty('--py',((e.clientY/innerHeight)*2-1).toFixed(3));});},{passive:true});}
+export function initMotion(){cards();fallbackFade();parallax();}

@@ -89,6 +89,14 @@ All delivered files sit FLAT in `/assets/` (no subfolders). Use exactly these na
 - Characters: char-heisenberg.png, char-walter-hazmat.png, char-jesse.png, char-saul.png (desk, pointing, wide), char-saul-alt.png (pink shirt, pointing, tight crop), char-gus.png, char-mike.png, char-hank.png, char-skyler.png, char-walter-jr.png
 - Props: prop-pork-pie-hat.png, prop-los-pollos.png, prop-pink-bear.png, prop-rv.png (Image to PDF progress vehicle), prop-pizza-roof.png (logo x5 egg)
 - Round 1A additions: bg-superlab.jpg (Compress PDF page + result screen, different crops/grades), bg-pilot-desert.jpg (Image to PDF, key `pilot`, 1080px wide: blurred/darkened/grained, never past cover, right side faded so the man and gun are not shown), char-green-shirt-fullbody.png (404 only, <=1.5x), char-green-shirt-gun.png (Konami egg ONLY, never a main page), bg-cast-clouds.jpg and char-trio.png (registered only, future About page)
+- Round 2B assets (present, registered in assets.js): bg-superlab.jpg (Compress page: blue-green layered scene + rays + parallax; result screen: gold crop)
+- bg-pilot-desert.jpg (present, Image to PDF)
+- bg-cast-clouds.jpg (present, registered only, later round)
+- char-trio.png (present, registered only, later round)
+- char-green-shirt-fullbody.png (present, 404 only)
+- char-green-shirt-gun.png (present, Konami egg only)
+- prop-rv.png (present, Image to PDF progress)
+- prop-pizza-roof.png (present, logo x5 egg)
 
 **Missing → use themed CSS/SVG placeholders, never block:**
 - Backgrounds: bg-desert-sunset, bg-desert-night, bg-lab-interior, bg-rv-desert, bg-office-albuquerque → build these as rich CSS/SVG scenes (gradients, silhouettes of mesa/cactus/RV/lab glassware, grain overlay), using the same asset paths in assets.js so real photos can replace them later.

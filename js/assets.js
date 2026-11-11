@@ -26,6 +26,7 @@ props:{hat:f('prop-pork-pie-hat.png'),pollos:f('prop-los-pollos.png'),bear:f('pr
  glasses:f('prop-glasses.png',false),rv:f('prop-rv.png',true),hazmatSuit:f('prop-hazmat-suit.png',false),gasMask:f('prop-gas-mask.png',false),
  barrel:f('prop-barrel.png',false),blueCrystals:f('prop-blue-crystals.png',false),flask:f('prop-flask.png',false),cashPile:f('prop-cash-pile.png',false),
  pizzaRoof:f('prop-pizza-roof.png',true),cactus:f('prop-cactus.png',false),tumbleweed:f('prop-tumbleweed.png',false)},
+audio:{intro:f('breaking-bad-intro.mp3',true)},   // Home "Start cooking" title theme (drop the file in /assets)
 video:{desert:f('bg-loop-desert.mp4',false)}};
 /** Silent fallback for any asset <img> that fails to load (file missing): the navbar logo becomes a plain text wordmark,
  *  every other image is removed so no broken-image icon or alt text shows. Blob/data images (user files, previews) are left alone. */

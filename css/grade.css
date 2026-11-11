@@ -7,7 +7,7 @@
    Every edge fades a little on purpose: the halo is clipped by the mask box, and an un-faded edge would show as a faint rectangle. */
 :root{--g-rim:#F5C400;--g-rimw:1.5px;--g-glow:#F5C40066;--g-halo:44px;--g-green:#37B862;--g-green-glow:#1E7A3Caa}
 
-:is(.hero-char,.tool-char,.nf-char,.res-char,.err-char,.knock-char,.footer .gus,.soon .hank,.cameo-img){
+:is(.cutout,.hero-char,.tool-char,.nf-char,.res-char,.err-char,.knock-char,.footer .gus,.soon .hank,.cameo-img){
  filter:url(#bd-grade) drop-shadow(0 0 var(--g-rimw) var(--g-rim)) drop-shadow(0 0 var(--g-halo) var(--g-glow)) drop-shadow(0 14px 16px #0009);
  -webkit-mask-image:linear-gradient(to top,transparent 0,#000 var(--fb,8%)),linear-gradient(to right,transparent 0,#000 var(--fl,8%)),linear-gradient(to left,transparent 0,#000 var(--fr,6%)),linear-gradient(to bottom,transparent 0,#000 var(--ft,7%));
  -webkit-mask-composite:source-in;
@@ -46,7 +46,7 @@
 /* Image to PDF — bg-pilot-desert.jpg (1080px wide: never scaled past `cover`).
    Darkened with a warm tint, softened with a slight blur, extra grain on top; the right 40% (the man and the gun) fades out so
    the Jesse cutout is the only person on the page and the photo cannot look pixelated or compete with the dropzone. */
-.scene[data-bg=pilot]{--bgx:4%;--bgy:62%;--bg-f:blur(1.4px) saturate(.85) contrast(1.06) brightness(1);--tint:linear-gradient(180deg,#6a320eb0 0%,#7a3c16a0 55%,#2a1408cc 100%);--tint-m:multiply;background:#150a05}
+.scene[data-bg=pilot]{--bgz:1.04;--bgx:4%;--bgy:62%;--bg-f:blur(1.4px) saturate(.85) contrast(1.06) brightness(1);--tint:linear-gradient(180deg,#6a320eb0 0%,#7a3c16a0 55%,#2a1408cc 100%);--tint-m:multiply;background:#150a05}
 /* lighter side shade on this page only: the photo is already darkened above, text stays on a >= 60% dark wash */
 .tool:has(.scene[data-bg=pilot])>.tool-shade{background:linear-gradient(90deg,#0a0c0ac2 0%,#0a0c0a8c 50%,#0a0c0a52 100%),linear-gradient(0deg,#0a0c0a 0,transparent 18%)}
 .scene[data-bg=pilot] .grain{opacity:.24}
@@ -55,6 +55,49 @@
 /* bg-superlab.jpg — two different crops + grades of the same photo. Both crops stay clear of the man's face (it sits in the top-centre of the
    photo) so the page never shows two Walters; the framing is done with a zoom (--bgz) around a corner (--bgo), not with extra markup. */
 /* Compress PDF page: lower-right, wide, green-teal grade (yellow suit + cash stacks, dim and out of focus behind the title) */
-.tool--lab>.scene[data-bg=superlab]{--bgx:100%;--bgy:100%;--bgz:1.5;--bgo:100% 100%;--bg-f:blur(.6px) saturate(.9) contrast(1.1) brightness(.7) hue-rotate(-8deg);--tint:linear-gradient(90deg,#03160bd0 0%,#06301a80 60%,#020a05cc 100%);--tint-m:multiply;background:#020a05}
+.tool--lab>.scene[data-bg=superlab]{--bgx:100%;--bgy:100%;--bgz:1.5;--bgo:100% 100%;--bg-f:blur(.6px) saturate(.9) contrast(1.1) brightness(.7) hue-rotate(22deg);--tint:linear-gradient(90deg,#03161ad0 0%,#07404880 60%,#02090ccc 100%),radial-gradient(ellipse at 75% 30%,#1fa3a055,transparent 65%);--tint-m:multiply;background:#02090c}
 /* Result screen: top-right, tight, blue "crystal" grade (the lit factory windows and the teal bins) */
-.result .scene[data-bg=superlab]{--bgx:100%;--bgy:0%;--bgz:2.2;--bgo:100% 0%;--bg-f:saturate(1.1) contrast(1.12) brightness(.8) hue-rotate(30deg);--tint:linear-gradient(90deg,#01080ce8 0%,#01080cc0 52%,#01080c70 100%),radial-gradient(ellipse at 30% 45%,#0b3a5a66,#01080ccc 88%);--tint-m:multiply;background:#01080c}
+.result .scene[data-bg=superlab]{--bgx:100%;--bgy:0%;--bgz:2.2;--bgo:100% 0%;--bg-f:sepia(.55) saturate(1.3) contrast(1.1) brightness(.85) hue-rotate(-12deg);--tint:linear-gradient(90deg,#1a0e03ea 0%,#2a1805c4 52%,#4a2c0a70 100%),radial-gradient(ellipse at 72% 28%,#f5c40066,#1a0e03cc 85%);--tint-m:multiply;background:#1a0e03}
+
+/* Compress PDF: light-ray glow (under the character, over the photo) + transform-only parallax (vars set by motion.js) */
+.tool--lab .tool-shade::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+ background:repeating-linear-gradient(105deg,transparent 0 9%,#7ff0e01f 11%,transparent 15% 24%),radial-gradient(ellipse 50% 60% at 82% 8%,#9ff6ea55,transparent 70%);
+ -webkit-mask-image:linear-gradient(200deg,#000 0,transparent 70%);mask-image:linear-gradient(200deg,#000 0,transparent 70%)}
+.tool--lab>.scene .scene-img{translate:calc(var(--px,0)*-6px) calc(var(--py,0)*-4px)}
+.tool--lab .tool-char>.char{translate:calc(var(--px,0)*10px) calc(var(--py,0)*6px)}
+@media(prefers-reduced-motion:reduce),(hover:none){.tool--lab>.scene .scene-img,.tool--lab .tool-char>.char{translate:none}}
+
+/* ── Round 3: Image to PDF scene (rays + parallax), dusty RV road, office lamp, 404 moon, pizza ── */
+.tool:has(.scene[data-bg=pilot])>.tool-shade::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;opacity:.5;
+ background:repeating-linear-gradient(105deg,transparent 0 9%,#ffd48a22 11%,transparent 15% 24%),radial-gradient(ellipse 50% 60% at 82% 6%,#ffc66d55,transparent 70%);
+ -webkit-mask-image:linear-gradient(200deg,#000 0,transparent 70%);mask-image:linear-gradient(200deg,#000 0,transparent 70%)}
+.tool:has(.scene[data-bg=pilot])>.scene .scene-img{translate:calc(var(--px,0)*-6px) calc(var(--py,0)*-4px)}
+.tool:has(.scene[data-bg=pilot])>.tool-char>.char{translate:calc(var(--px,0)*10px) calc(var(--py,0)*6px)}
+@media(prefers-reduced-motion:reduce),(hover:none){.tool:has(.scene[data-bg=pilot])>.scene .scene-img,.tool:has(.scene[data-bg=pilot])>.tool-char>.char{translate:none}}
+.rvp-lane{background:linear-gradient(#b0802f 0,#8a5d25 45%,#6a4520 100%);box-shadow:inset 0 5px 0 #d3a95a}
+.rvp-dash{opacity:.45;background:repeating-linear-gradient(90deg,#f2ebd8 0 30px,transparent 30px 60px)}
+.rvp-dust::before,.rvp-dust::after{content:"";position:absolute;bottom:0;width:46px;height:20px;background:radial-gradient(closest-side,#e0c996cc,transparent)}
+.rvp-dust::before{left:-18px}.rvp-dust::after{left:-40px;bottom:6px}
+.is-running .rvp-dust::before{animation:puff .7s ease-out .23s infinite backwards}.is-running .rvp-dust::after{animation:puff .7s ease-out .46s infinite backwards}
+@media(prefers-reduced-motion:reduce){.is-running .rvp-dust,.is-running .rvp-dust::before,.is-running .rvp-dust::after{animation:none}}
+.tool--office .tool-shade::after{content:"";position:absolute;inset:0;pointer-events:none;mix-blend-mode:screen;
+ background:radial-gradient(ellipse 38% 48% at 88% 12%,#ffb84a66,transparent 70%),radial-gradient(ellipse 30% 40% at 14% 0%,#ff9a3a33,transparent 70%),repeating-linear-gradient(112deg,transparent 0 7%,#ffcf7a1c 8.5%,transparent 11% 19%);
+ -webkit-mask-image:linear-gradient(190deg,#000 0,transparent 75%);mask-image:linear-gradient(190deg,#000 0,transparent 75%)}
+.nf-char{--g-rim:#cfe9ff;--g-glow:#7fc4ff88;--g-halo:46px}
+.nf-shade::before{content:"";position:absolute;right:calc(clamp(24px,12vw,220px) - 90px);bottom:0;width:480px;height:520px;background:radial-gradient(ellipse 50% 55% at 50% 40%,#9fd2ff40,transparent 72%);mix-blend-mode:screen}
+@media(min-width:1200px){.nf-shade::after{content:"";position:absolute;right:calc(clamp(24px,12vw,220px) + 250px);bottom:22px;width:260px;height:300px;background:url(../assets/char-gus.png) center/contain no-repeat;filter:brightness(0) blur(.5px);opacity:.4}}
+
+/* ── Round 4: one shared cutout class (.cutout, set on every data-char cutout; the same rule also covers the wrapper-based ones: result, error, Konami, footer, coming-soon, cameo) ──
+   Grade = #bd-grade (warm shadows, crushed blacks, lifted contrast); edge glow = --g-rim/--g-glow (hazmat yellow on dark scenes, tile green on tool pages);
+   grounding drop shadow; edge fades via --fl/--fr/--ft/--fb masks; rim colour follows the scene's light (office lamp, 404 moon). */
+.tool--office .tool-char{--g-rim:var(--hazmat);--g-glow:#ffb84a88}
+/* Home hero Walter: source ~331px wide, so capped at ~1.6x, sun glow behind, slow idle float + breathing glow (transform/opacity only) */
+.hero-char,.hero-char.char{height:min(94%,640px);z-index:3}
+.hero .shade::before{content:"";position:absolute;right:max(-2vw,-30px);bottom:0;width:min(780px,60vw);height:100%;pointer-events:none;
+ background:radial-gradient(ellipse 46% 48% at 52% 46%,#ffb23fb0,#e07b2a55 42%,transparent 72%)}
+@media(max-width:800px){.hero-char,.hero-char.char{height:min(80%,520px)}}
+@media(prefers-reduced-motion:no-preference){
+ .hero-char{animation:charIn 1s var(--ease) .2s backwards,heroFloat 11s ease-in-out 1.4s infinite alternate}
+ .hero .shade::before{animation:heroBreathe 7s ease-in-out infinite alternate}}
+@keyframes heroFloat{to{transform:translateY(-7px)}}
+@keyframes heroBreathe{from{opacity:.7}to{opacity:1}}
