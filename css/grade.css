@@ -101,3 +101,9 @@
  .hero .shade::before{animation:heroBreathe 7s ease-in-out infinite alternate}}
 @keyframes heroFloat{to{transform:translateY(-7px)}}
 @keyframes heroBreathe{from{opacity:.7}to{opacity:1}}
+
+/* ── Poster treatment: duotone + halftone (#bd-poster in js/grade.js), 2px hazmat outline, hard offset shadow. RV bar, 404, pizza egg, gun egg, trio only. ── */
+.rvp-body img,.nf-char img,.pizza img,.knock-char img,[data-char="trio"] img,.poster-cut{
+ filter:url(#bd-poster) drop-shadow(2px 0 0 var(--hazmat,#F5C400)) drop-shadow(-2px 0 0 var(--hazmat,#F5C400)) drop-shadow(0 2px 0 var(--hazmat,#F5C400)) drop-shadow(0 -2px 0 var(--hazmat,#F5C400)) drop-shadow(5px 5px 0 #000);
+ image-rendering:auto}
+.nf-char,.knock-char,[data-char="trio"],.pizza{filter:none;-webkit-mask-image:none;mask-image:none}

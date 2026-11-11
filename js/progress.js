@@ -18,7 +18,7 @@ export function createRvProgress(host,{onCancel}={}){
   <div class="rvp-road" aria-hidden="true">
    <div class="rvp-sky"></div><div class="rvp-cacti"><span>${prop('cactus')}</span><span>${prop('cactus')}</span><span>${prop('cactus')}</span></div>
    <div class="rvp-lane"><i class="rvp-dash"></i></div>
-   <div class="rvp-rv" style="--p:0"><span class="rvp-dust"></span><span class="rvp-body">${prop('rv','','',true)}</span></div>
+   <div class="rvp-rv" style="--p:0"><span class="rvp-dust"><i class="rvp-puff"></i><i class="rvp-puff"></i></span><span class="rvp-body">${prop('rv','','',true)}<i class="rvp-hl"></i></span></div>
    <div class="rvp-flag">${prop('blueCrystals')}</div>
   </div>
   <div class="rvp-bot"><span class="rvp-line mono"></span><span class="rvp-detail mono"></span></div>

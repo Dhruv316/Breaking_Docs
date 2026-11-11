@@ -33,6 +33,8 @@
 <main>
 <section class="nf" data-scene="night">
  <div class="nf-shade"></div>
+ <div class="nf-spot" aria-hidden="true"></div>
+ <div class="nf-ground" aria-hidden="true"><i class="nf-gshadow"></i><i class="nf-pool"></i><i class="nf-dust"></i><i class="nf-dust"></i><i class="nf-dust"></i></div>
  <div class="nf-char" data-char="greenShirt"></div>
  <div class="wrap nf-body">
   <div class="tile nf-tile" aria-hidden="true"><span class="num mono">404</span><span class="mass mono">??</span><span class="sym">Nf</span></div>
@@ -44,4 +46,8 @@
 </section>
 </main>
 <footer id="footer"></footer>
+<script>(function(){var n=document.querySelector('.nf'),c=document.querySelector('.nf-char');
+ if(!n||!c||!matchMedia('(hover:hover) and (pointer:fine)').matches||matchMedia('(prefers-reduced-motion:reduce)').matches)return;
+ n.addEventListener('pointermove',function(e){var r=n.getBoundingClientRect();c.style.setProperty('--ry',(((e.clientX-r.left)/r.width-.5)*-14).toFixed(2));c.style.setProperty('--rx',(((e.clientY-r.top)/r.height-.5)*6).toFixed(2));});
+ n.addEventListener('pointerleave',function(){c.style.setProperty('--ry',0);c.style.setProperty('--rx',0);});})();</script>
 </body></html>

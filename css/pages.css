@@ -51,14 +51,27 @@
 /* 404 */
 .nf{position:relative;isolation:isolate;overflow:hidden;min-height:min(86vh,820px);display:flex;align-items:center;background:#02040a}
 .nf-shade{position:absolute;inset:0;z-index:2;pointer-events:none;background:linear-gradient(90deg,#02040ae6 0%,#02040a99 45%,#02040a40 100%),linear-gradient(0deg,#02040a 0,transparent 20%)}
-.nf-char{position:absolute;z-index:3;right:clamp(24px,12vw,220px);bottom:22px;height:441px;pointer-events:none}   /* char-green-shirt-fullbody.png is 353px tall: 441px = 1.25x, never past 1.5x (530px) */
-.nf::before{content:"";position:absolute;z-index:2;bottom:14px;right:calc(clamp(24px,12vw,220px) - 34px);width:300px;height:30px;background:radial-gradient(closest-side,#000d,transparent);filter:blur(4px);pointer-events:none}
+.nf{--nfr:clamp(24px,12vw,220px)}
+.nf-char{position:absolute;z-index:3;right:var(--nfr);bottom:22px;height:490px;pointer-events:none;transform-origin:50% 100%;transform:perspective(900px) rotateY(calc(var(--ry,0)*1deg)) rotateX(calc(var(--rx,0)*1deg));transition:transform .25s ease-out}   /* char-green-shirt-fullbody.png is 353px tall: 441px = 1.25x, never past 1.5x (530px) */
+/* 404 hero scene: moon spotlight cone, long ground shadow, ground line + drifting dust (transform/opacity only). char 490px tall = 1.39x natural (max 1.5x) */
+.nf::before{display:none}
+.nf-spot{position:absolute;z-index:2;top:0;bottom:22px;right:calc(var(--nfr) - 96px);width:450px;pointer-events:none;mix-blend-mode:screen;filter:blur(5px);transform-origin:50% 0;
+ clip-path:polygon(43% 0,57% 0,100% 100%,0 100%);background:linear-gradient(#d6ecffcc 0,#a9d4ff44 55%,#cfe9ff66 100%);animation:nfhaze 5.5s ease-in-out infinite}
+@keyframes nfhaze{0%,100%{opacity:.72;transform:scaleX(1)}30%{opacity:.95;transform:scaleX(1.025)}60%{opacity:.8;transform:scaleX(.985)}}
+.nf-ground{position:absolute;z-index:2;left:0;right:0;bottom:22px;height:2px;pointer-events:none;background:linear-gradient(90deg,transparent,#cfe9ff55 35%,#cfe9ffaa 85%,transparent)}
+.nf-gshadow{position:absolute;right:calc(var(--nfr) + 70px);top:-4px;width:min(620px,70vw);height:34px;border-radius:50%;background:radial-gradient(closest-side,#000f,#000a 50%,transparent);filter:blur(4px);transform-origin:100% 50%;transform:scaleY(.8)}
+.nf-pool{position:absolute;right:calc(var(--nfr) - 40px);top:-14px;width:330px;height:30px;border-radius:50%;background:radial-gradient(closest-side,#cfe9ff77,transparent);mix-blend-mode:screen}
+.nf-dust{position:absolute;right:calc(var(--nfr) + 20px);top:-18px;width:90px;height:26px;border-radius:50%;opacity:0;background:radial-gradient(closest-side,#cfe0f088,transparent);animation:nfdust 7s linear infinite}
+.nf-dust:nth-child(4){animation-delay:2.3s;width:70px}.nf-dust:nth-child(5){animation-delay:4.6s;width:110px}
+@keyframes nfdust{0%{opacity:0;transform:translateX(0) scale(.7)}20%{opacity:.5}100%{opacity:0;transform:translateX(-300px) scale(1.8)}}
+@media(prefers-reduced-motion:reduce){.nf-spot,.nf-dust{animation:none}.nf-dust{display:none}.nf-char{transform:none;transition:none}}
+@media(hover:none),(pointer:coarse){.nf-char{transform:none}}
 .nf-body{position:relative;z-index:4;display:grid;gap:26px;justify-items:start;padding:72px 0 120px}
 .nf-tile{width:clamp(110px,16vw,150px)}.nf-tile .sym{font-size:clamp(52px,8vw,80px)}
 .nf h1{font-size:clamp(48px,8vw,104px);line-height:.92;max-width:6.6em;color:var(--bone);text-shadow:0 4px 0 var(--tile-green-dark),0 8px 0 #000,0 0 60px #55d0ff44}
 .nf-sub{font-size:var(--t-xl);color:var(--bone);text-shadow:0 2px 8px #000}
 .nf .tape{position:absolute;left:0;right:0;bottom:0}
-@media(max-width:800px){.nf-char{opacity:.5;right:4vw;height:353px}.nf::before{opacity:.5;right:calc(4vw - 40px)}.nf-shade{background:linear-gradient(0deg,#02040a 0,#02040acc 50%,#02040a88)}}
+@media(max-width:800px){.nf{--nfr:4vw}.nf-char{opacity:.5;height:353px}.nf-spot{opacity:.6;width:340px}.nf-shade{background:linear-gradient(0deg,#02040a 0,#02040acc 50%,#02040a88)}}
 
 /* ════════ Phase 3 — Compress PDF page (bg-lab-interior scene + char-walter-hazmat) ════════ */
 .tool--lab .tool-shade{background:linear-gradient(90deg,#020a05d9 0%,#020a05a6 50%,#020a058c 100%),linear-gradient(0deg,#0a0c0a 0,transparent 18%)}
