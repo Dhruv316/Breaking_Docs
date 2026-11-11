@@ -25,8 +25,8 @@ function burst(host){
  *   heading / downloadLabel / stats override the defaults (stats = the mono line's items; default is pages · size)
  * @returns {{destroy():void}} destroy() revokes the Blob URL and empties the host
  */
-export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,notes=[],onAgain,heading=t('result.heading'),downloadLabel=t('result.download'),stats=null}){
- const url=URL.createObjectURL(blob);
+export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,notes=[],onAgain,heading=t('result.heading'),downloadLabel=t('result.download'),stats=null,parts=[]}){
+ const url=URL.createObjectURL(blob),partUrls=parts.map(p=>URL.createObjectURL(p.blob));
  const pageText=pages===1?t('result.pagesOne'):fill(t('result.pages'),{n:pages});
  host.innerHTML=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="stamp-rough" x="-5%" y="-5%" width="110%" height="110%"><feTurbulence type="fractalNoise" baseFrequency=".9" numOctaves="2" seed="7" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2"/></filter></svg>${scene('superlab')}
   <div class="res-char" aria-hidden="true">${char('heisenberg','')}</div>
@@ -36,6 +36,7 @@ export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,not
    <h2 class="res-head" tabindex="-1">${esc(heading)}</h2>
    <a class="btn res-dl" href="${url}" download="${esc(filename)}">${esc(downloadLabel)}</a>
    <p class="res-stats mono">${(stats||[pageText,formatBytes(blob.size)]).map(x=>`<b>${esc(x)}</b>`).join('<span aria-hidden="true"> · </span>')}</p>
+   ${parts.length?`<ul class="res-parts" style="list-style:none;margin:0;padding:0;display:grid;gap:8px;width:min(100%,560px)">${parts.map((p,i)=>`<li class="res-note" style="display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap"><span>${esc(p.label)} · ${formatBytes(p.blob.size)}</span><a class="btn btn-2 btn-sm" href="${partUrls[i]}" download="${esc(p.filename)}">${esc(t('split.partDownload'))}</a></li>`).join('')}</ul>`:''}
    ${notes.map(n=>`<p class="res-note mono">${esc(n)}</p>`).join('')}
    <div class="res-actions">
     <button type="button" class="btn btn-danger btn-sm res-again">${t('result.again')}</button>
@@ -45,5 +46,5 @@ export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,not
  host.querySelector('.res-again').addEventListener('click',()=>onAgain&&onAgain());
  host.querySelector('.res-head').focus({preventScroll:true});
  burst(host);
- return {destroy(){URL.revokeObjectURL(url);host.replaceChildren();}};
+ return {destroy(){URL.revokeObjectURL(url);partUrls.forEach(u=>URL.revokeObjectURL(u));host.replaceChildren();}};
 }

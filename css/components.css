@@ -343,3 +343,17 @@ html.sc-hidden .pa-sp,html.sc-hidden .pa-bub{animation-play-state:paused}
 .snd-v[aria-pressed="true"]{background:var(--hazmat);border-color:var(--hazmat);color:var(--heisenberg)}
 @media(max-width:700px){.snd-t{display:none}.topbar .wrap{gap:10px}.snd-more{min-width:48px}}
 .snd-i,.snd-more svg{flex:none}
+
+/* Split PDF: page grid + text fields (new classes only) */
+.pggrid{list-style:none;margin:0;padding:6px 2px 10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(92px,1fr));gap:14px;max-height:min(560px,70vh);overflow:auto}
+.pgtile{min-height:0;padding:30px 6px 6px;cursor:pointer;font:inherit;border-width:3px;touch-action:pan-y}
+.pgtile .thumb{aspect-ratio:3/4}.pgtile canvas{max-width:100%;max-height:100%;display:block}
+.pgtile.is-picked{outline:4px solid var(--hazmat);outline-offset:2px;filter:brightness(1.15)}.pgtile:focus-visible{outline:3px solid var(--blue-sky);outline-offset:3px}
+.field{display:grid;gap:6px;margin-top:14px}.field label{font:var(--t-s) var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--dust)}
+.field input[type=text],.field input[type=number]{min-height:48px;padding:0 14px;background:#0f160f;border:3px solid #34463a;color:var(--bone);font:var(--t-m) var(--f-mono);max-width:420px}
+.field input:focus-visible{outline:3px solid var(--blue-sky);outline-offset:3px;border-color:var(--hazmat)}.field input[aria-invalid=true]{border-color:var(--sunset-red)}
+.field .chk{display:flex;gap:10px;align-items:center;font:600 var(--t-m) var(--f-body);text-transform:none;letter-spacing:0;color:var(--bone)}.field .chk input{width:22px;height:22px;accent-color:var(--tile-green)}
+
+/* Remove pages: pages marked for removal are dimmed and crossed out (new classes only) */
+.pggrid--cut .pgtile.is-picked{outline-color:var(--sunset-red);filter:grayscale(.6) brightness(.8);opacity:.62}
+.pggrid--cut .pgtile.is-picked::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top right,transparent calc(50% - 3px),var(--sunset-red) calc(50% - 3px) calc(50% + 3px),transparent calc(50% + 3px)),linear-gradient(to bottom right,transparent calc(50% - 3px),var(--sunset-red) calc(50% - 3px) calc(50% + 3px),transparent calc(50% + 3px))}

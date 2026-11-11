@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<script>if(!("PageRevealEvent" in window))document.documentElement.classList.add("pg-fb")</script>
+<title>Remove pages — Breaking Docs</title>
+<meta name="description" content="Drop the pages you don't want. Keep the rest untouched. Done in your browser. Pure and private.">
+<meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css">
+<script type="module" src="js/ui.js"></script>
+<script type="module">import {init} from './js/tools/remove-pages.js';init();</script></head>
+<body>
+<div id="topbar"></div>
+<main>
+<section class="tool tool--office" id="tool" data-scene="office" data-state="idle">
+ <div class="tool-shade"></div>
+ <div class="tool-char" data-char="gus"></div>
+ <div class="wrap tool-body">
+
+  <header class="tool-title">
+   <div class="tile tool-tile" id="title-tile" aria-hidden="true"></div>
+   <div><h1 data-copy="tools.Rm.name"></h1><p class="tool-promise" data-copy="tools.Rm.promise"></p></div>
+  </header>
+
+  <div data-show="idle filesChosen">
+   <div class="tray" id="tray">
+    <div class="tray-in">
+     <span class="tray-barrel" id="dz-barrel" aria-hidden="true"></span>
+     <button type="button" class="dz-hit" id="dz-hit" aria-describedby="dz-types">
+      <span class="dz-flask" id="dz-flask" aria-hidden="true"></span>
+      <span class="dz-title" id="dz-label" data-copy="dropzone.idle"></span>
+      <span class="dz-sub" data-copy="dropzone.sub"></span>
+      <span class="dz-types mono" id="dz-types"></span>
+     </button>
+     <div class="pdfcard" id="pdfcard" hidden>
+      <div class="pdf-prev is-loading" id="pdf-prev"><img alt="" decoding="async"></div>
+      <div class="pdf-meta">
+       <h2 class="pdf-name" id="pdf-name"></h2>
+       <p class="pdf-facts mono" id="pdf-facts"></p>
+       <button type="button" class="act del" id="pdf-rm"><span data-copy="grid.remove"></span></button>
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+
+  <section class="sheet" data-show="filesChosen" aria-labelledby="sheet-h">
+   <h2 id="sheet-h" class="sheet-h mono" data-copy="opts.title"></h2>
+   <p class="fine-note" style="margin-top:0" data-copy="remove.hint"></p>
+   <div class="field"><label for="ranges" data-copy="remove.rangesLabel"></label>
+    <input type="text" id="ranges" autocomplete="off" spellcheck="false" placeholder="2, 5-7"></div>
+   <div class="res-actions">
+    <button type="button" class="btn btn-2 btn-sm" id="b-odd" data-copy="remove.odd"></button>
+    <button type="button" class="btn btn-2 btn-sm" id="b-even" data-copy="remove.even"></button>
+    <button type="button" class="btn btn-2 btn-sm" id="b-clear" data-copy="remove.clear"></button></div>
+   <p class="mono" id="sel-count" aria-live="polite" style="font:var(--t-m) var(--f-mono);color:var(--hazmat);margin-top:14px"></p>
+   <ul class="pggrid pggrid--cut" id="pages" aria-label=""></ul>
+  </section>
+
+  <div class="go-row" data-show="idle filesChosen"><button type="button" class="btn go" id="go" disabled><span></span></button></div>
+
+  <section class="progress-panel" id="progress" data-show="processing" hidden></section>
+
+  <section class="result" id="result" data-show="done" hidden aria-live="polite"></section>
+
+  <section class="errpanel" data-show="error" hidden aria-live="polite">
+   <div class="err-char" id="err-char" aria-hidden="true"></div>
+   <div class="err-body">
+    <span class="err-prop" id="err-prop" aria-hidden="true"></span>
+    <h2 id="err-msg" tabindex="-1"></h2><div id="err-extra"></div>
+    <div class="res-actions">
+     <button type="button" class="btn btn-sm" id="err-retry" data-copy="errors.retry"></button>
+     <button type="button" class="btn btn-danger btn-sm" id="err-again" data-copy="result.again"></button>
+    </div>
+   </div>
+  </section>
+
+ </div>
+ <div class="tape tool-tape"></div>
+</section>
+
+<section class="tools more" data-scene="night"><div class="wrap">
+ <h2 data-copy="home.gridHeading"></h2>
+ <div class="grid" data-tiles='{"live":true,"exclude":"Rm"}'></div>
+</div></section>
+</main>
+<footer id="footer"></footer>
+</body></html>

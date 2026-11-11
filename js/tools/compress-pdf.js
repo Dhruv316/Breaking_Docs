@@ -51,14 +51,14 @@ async function setupWorker(lib){
  try{const w=new Worker(WORKER_URL);w.terminate();lib.GlobalWorkerOptions.workerSrc=WORKER_URL;}   // cross-origin workers throw here
  catch{await useBlobWorker(lib);}}
 /** Loads pdf.js 3.11.174 from cdnjs and points it at a working worker. @returns {Promise<any>} pdfjsLib */
-async function loadPdfjs(){
+export async function loadPdfjs(){
  try{
   const lib=await loadScriptOnce(PDFJS_URL,['pdfjsLib','pdfjs-dist/build/pdf']);
   if(!workerReady)workerReady=setupWorker(lib).catch(e=>{workerReady=null;throw e;});
   await workerReady;return lib;
  }catch(e){e.lib='pdfjs';throw e;}}
 /** Opens a PDF. If the worker itself is the problem, retries once through a Blob-URL worker. */
-async function openPdf(lib,file){
+export async function openPdf(lib,file){
  const attempt=async()=>lib.getDocument({data:new Uint8Array(await file.arrayBuffer()),isEvalSupported:false,verbosity:0}).promise;
  try{return await attempt();}
  catch(e){
