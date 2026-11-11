@@ -21,6 +21,7 @@ tools:{
  Cp:{name:'Compress PDF',promise:'Cut the size. Keep the quality.',button:'Cook it down',verb:'Cooking… {percent}%'},
  Mg:{name:'Merge PDF',promise:'Many PDFs in. One pure PDF out.',button:'Cook them together',verb:'File {n} of {total}…'},
  Sp:{name:'Split PDF',promise:'One PDF in. Exactly the pages you want out.',button:'Cook it apart',verb:'Part {n} of {total}…'},
+ St:{name:'Study Pack',promise:'Turn notes into flashcards, a quiz and a cheat sheet.',button:'Cook the study pack',verb:'{percent}%'},
  Rm:{name:'Remove pages',promise:'Drop the pages you don\'t want. Keep the rest untouched.',button:'Wipe them out',verb:'Page {n} of {total}…'}},
 split:{modeLabel:'How to split',mRanges:'By ranges',mEvery:'Every N pages',mPick:'Pick pages',rangesLabel:'Page ranges',rangesHint:'Example: 1-3, 5, 7-9',rangesPh:'1-3, 5, 7-9',
  mergeAll:'Merge all ranges into one PDF',everyLabel:'Pages per file',pickHint:'Click pages to select them. Shift-click for a range. Space or Enter also toggle.',
@@ -51,7 +52,7 @@ errors:{generic:'Something went wrong. Reload and try again.',
  libraryPpt:'The lab equipment (slide renderer) didn\'t load. Check your connection, then try again.',
  onePpt:'One deck at a time. We took {name}.',
  manySlides:'{n} slides. This one takes a while, so keep this tab open.'},
-dropzone:{idle:'Drop your files here',sub:'or click to choose. Nothing leaves your device.',over:'Yeah. Right there.',types:'{types} · up to {size}',maxFiles:'Up to {n} files per batch.',label:'Choose image files',pdfTypes:'PDF',pdfLabel:'Choose a PDF file',pdfsLabel:'Choose PDF files',pptTypes:'PPTX, POTX',pptLabel:'Choose a PowerPoint file'},
+dropzone:{idle:'Drop your files here',sub:'or click to choose. Nothing leaves your device.',over:'Yeah. Right there.',types:'{types} · up to {size}',maxFiles:'Up to {n} files per batch.',label:'Choose image files',pdfTypes:'PDF',pdfLabel:'Choose a PDF file',pdfsLabel:'Choose PDF files',pptTypes:'PPTX, POTX',studyTypes:'PDF, PPTX, TXT, MD',studyLabel:'Choose a PDF, PPTX, TXT or MD file',pptLabel:'Choose a PowerPoint file'},
 progress:{lines:['Cooking… keep the lid on.','Measuring purity.','Calling the lab.','Stay out of the way. Almost done.','Tread lightly.','Applying science.'],count:'Image {n} of {total}',page:'Page {n} of {total}',cancel:'Cancel',label:'Progress',
  opening:'Opening the deck…',binding:'Binding the pages…',
  saulLines:['Presentation is everything. Ask my billboards.','Objection sustained. Slide approved.','Filing slides, no billable hours.','Counselor\'s rule: no slide left behind.','Stamping each page. Notarized, more or less.','Keep this tab open. It\'s a retainer.']},
@@ -72,11 +73,25 @@ fine:{link:'Fine print',note:'Pages become images, so text won\'t be selectable.
  pp3:'Check the PDF before you send it. We never promise a perfect match.'},
 file:{previewAlt:'First page preview',slidePreviewAlt:'First slide preview'},
 deck:{slides:'{n} slides',slidesOne:'1 slide'},
+study:{cardsLabel:'Number of cards',cardsValue:'{n} cards',chaptersLabel:'Chapters to cook',chaptersNone:'Pick at least one chapter.',
+ sectionsFound:'{n} sections found',sectionsOne:'1 section found',factsChars:'{n} characters',
+ stepExtract:'Extracting',stepAnalyze:'Analyzing',stepBuild:'Building',stepOf:'Step {n} of 3 · {label}',
+ truncated:'Long file. We kept the first 600,000 characters and left the rest out.',
+ stamp:'{n} cards from {sections} batches',stampOne:'{n} cards from 1 batch',stampCard:'1 card from {sections} batches',stampCardOne:'1 card from 1 batch',
+ heading:'Study pack cooked.',tabsLabel:'Study pack',tabCards:'Flashcards',tabQuiz:'Quiz',tabCheat:'Cheat sheet',coming:'Coming next',
+ fine:['Study Pack finds definitions and key sentences by rules, not AI.','It works best on notes and textbooks with clear definitions.','Review the cards before you trust them.','Scanned PDFs need text first.'],
+ noCards:'No cards found. Try text with definitions or longer paragraphs.',fewQuestions:'Only a few questions could be built from this text.',
+ fc:{card:'Flashcard. Press Space or Enter to flip.',front:'Term',back:'Definition',counter:'Card {n} of {total}',mastered:'{m} of {total} mastered',
+  gotIt:'Got it',again:'Again',shuffle:'Shuffle',restart:'Restart',listView:'List view',studyView:'Study view',edit:'Edit',del:'Delete',save:'Save',cancel:'Cancel',
+  anki:'Download for Anki',term:'Term',definition:'Definition',source:'Source',actions:'Actions',complete:'Batch complete',completeSub:'All {total} cards mastered.',
+  empty:'No cards left.',hint:'Space flips · → or K got it · ← or J again · swipe on touch',listLabel:'All flashcards',editLabel:'Edit card',
+  editFront:'Term',editBack:'Definition',rowAria:'{term}'}},
 notes:{downscaled:'Big images were scaled down to 4000 px on the long side so your browser stays alive.',
  capped:'Some very large pages were rendered at a lower DPI to fit your browser.',
  failedSlides:'{n} slide(s) couldn\'t be drawn and came out blank: {list}.',
  cappedSlides:'Some very large slides were rendered at a lower scale to fit your browser.'},
 notFound:{heading:'You\'re not supposed to be here.',sub:'This page doesn\'t exist.',button:'Back to the lab'},
+extractErrors:{NO_TEXT:'Nothing to cook here. No text, just pictures. If it\'s a scan, run it through OCR first.',LOCKED:'Locked tighter than the superlab. Remove the password, then bring it back.',CORRUPT:'This file is cooked wrong. Corrupt or damaged. Get a clean copy and try again.',BAD_TYPE:'Wrong chemistry. We take PDF, PPTX, TXT, or MD only.',TOO_LONG:'Too much product. This file is over 1.5 million characters. Split it and try again.'},
 imTypes:'JPG, PNG, WEBP, GIF, BMP, SVG, AVIF, HEIC, TIFF'};
 /** Tile registry. Adding a tool = one entry here + page + js/tools/<name>.js */
 export const TOOLS=[
@@ -84,6 +99,7 @@ export const TOOLS=[
 {n:2,sym:'Pp',live:true,href:'ppt-to-pdf.html',mass:'50MB'},
 {n:3,sym:'Cp',live:true,href:'compress-pdf.html',mass:'100MB'},
 {n:4,sym:'Mg',live:true,href:'merge-pdf.html',mass:'100MB'},{n:5,sym:'Sp',live:true,href:'split-pdf.html',mass:'100MB'},{n:6,sym:'Rm',live:true,href:'remove-pages.html',mass:'100MB'},
-{n:7,sym:'Wm',name:'Watermark'},{n:8,sym:'Pn',name:'Page numbers'},{n:9,sym:'Ul',name:'Unlock PDF'}];
+{n:7,sym:'St',live:true,href:'study-pack.html',mass:'50MB'},
+{n:8,sym:'Wm',name:'Watermark'},{n:9,sym:'Pn',name:'Page numbers'},{n:10,sym:'Ul',name:'Unlock PDF'}];
 /** @param {string} path dot path into COPY */
 export const t=p=>p.split('.').reduce((o,k)=>o?.[k],COPY)??'';
