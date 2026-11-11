@@ -66,7 +66,7 @@ a.tile:active{transform:translateY(2px) scale(.99)}
 .btn:hover{transform:translateY(-2px)}
 .btn:active{transform:translateY(3px) scale(.985)}
 .btn[disabled]:hover,.btn[disabled]:active{transform:none}
-.act,.seg span,.nav a,.sound{transition:none}
+.act,.seg span,.nav a{transition:none}
 .presets .pc{transition:transform .12s var(--ease)}
 .dz-hit{transition:transform .12s var(--ease)}.dz-hit:active{transform:scale(.992)}
 /* dropzone: pulse while dragging (opacity glow layer + flask bob + slight swell) */

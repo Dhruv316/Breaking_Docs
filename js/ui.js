@@ -1,9 +1,9 @@
-/* ui.js — navbar, footer, tiles, copy binding, theme, sound toggle, easter eggs, reduced motion */
+/* ui.js — navbar, footer, tiles, copy binding, theme, title music, easter eggs, reduced motion */
 import {ASSETS,installCssVars,scene,char,prop} from './assets.js';
 import {initScenes} from './scenes.js';
 import {COPY,TOOLS,t} from './copy.js';
 import {reducedMotion,toast} from './ui-kit.js';
-import {soundControl,mountSound} from './sound-ui.js';
+import {initIntro as initTheme} from './sound.js';
 import {initEggs} from './eggs.js';
 import {initFx} from './fx.js';
 import {initMotion} from './motion.js';
@@ -28,8 +28,7 @@ function navbar(){const home=!!$('#hero');const base=home?'':'index.html';
  const m=$('main');if(m){m.id='main';m.tabIndex=-1;}
  $('#topbar').outerHTML=`<a class="skip" href="#main">${COPY.nav.skip}</a><header class="topbar"><div class="wrap"><a class="logo" href="index.html" aria-label="${COPY.brand.name}"><img src="${ASSETS.brand.logo.src}" alt="${COPY.brand.name}" width="125" height="54"></a>
  ${credit('nav')}
- <nav class="nav" aria-label="${COPY.nav.aria}"><a href="${base}#tools">${COPY.nav.tools}</a><a href="${base}#about">${COPY.nav.about}</a></nav>
- ${soundControl()}</div></header>`;}
+ <nav class="nav" aria-label="${COPY.nav.aria}"><a href="${base}#tools">${COPY.nav.tools}</a><a href="${base}#about">${COPY.nav.about}</a></nav></div></header>`;}
 function footer(){const f=$('#footer');f.className='footer';
  f.innerHTML=`<div class="tape"></div>${scene('night')}<div class="gus">${char('gus',COPY.alt.gus)}</div>
  <div class="wrap"><p class="tag-line">${COPY.brand.tagline}</p><p>${COPY.brand.footer}</p>
@@ -46,9 +45,9 @@ function bind(){document.querySelectorAll('[data-copy]').forEach(e=>{const v=t(e
  document.querySelectorAll('[data-promise]').forEach(e=>{e.innerHTML=COPY.home.promises.map((p,i)=>{const [a,b]=p.split(' — ');
   return `<div class="tile pt" style="--i:${i}"><span class="num mono">${i+1}</span><span class="sym">${COPY.home.promiseSyms[i]}</span><span class="name"><b>${a}</b>${b}</span></div>`}).join('');});
  if($('#hero'))document.title=COPY.home.title;}
-/** Boots every page: css vars, chrome, copy, motion, sound toggle, eggs, intro. */
+/** Boots every page: css vars, chrome, copy, motion, title music, eggs, intro. */
 export function init(){installCssVars();installGrade();navbar();if($('#footer'))footer();bind();initScenes();initFx();initMotion();initEggs();
  if(reducedMotion)document.querySelectorAll('svg').forEach(s=>s.pauseAnimations?.());
- mountSound();
+ initTheme(ASSETS.audio.intro.src);
  if($('#hero'))initIntro();}
 init();
