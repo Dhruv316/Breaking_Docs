@@ -1,7 +1,7 @@
 /* copy.js — every user-facing string (mirrors COPY.md). Edit here only. */
 export const COPY={
 brand:{name:'Breaking Docs',tagline:'Break it down. Build it back.',footer:'Your files never leave this browser. That\'s the business model.'},
-nav:{tools:'Tools',about:'About',aria:'Main',skip:'Skip to content',soundOff:'Sound off',soundOn:'Sound on'},
+nav:{tools:'Tools',about:'About',aria:'Main',skip:'Skip to content',soundOff:'Sound off',soundOn:'Sound on',soundAria:'Sound',soundOpts:'Sound options',vol:'Volume',volSteps:['Low','Medium','High'],amb:'Desert wind',ambOff:'Off',ambOn:'On',ambNote:'Off while reduced motion is on.'},
 credit:{by:'Created by',aria:'Created by Dhruv Rane',
  // name = plain letters and element tiles [symbol, atomic number]; ' ' = word gap
  name:['D',['H',1],['Ru',44],['V',23],' ',['Ra',88],['Ne',10]]},

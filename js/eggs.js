@@ -1,4 +1,4 @@
-/* eggs.js — Konami code + logo-x5 easter eggs. Silent unless sound is on. */
+/* eggs.js — Konami code + logo-x5 easter eggs. Silent unless sound is on (knock for Konami, two thumps for the pizza). */
 import {ASSETS,char,prop} from './assets.js';
 import {COPY} from './copy.js';
 import {play} from './sound.js';
@@ -15,7 +15,7 @@ export function konami(){if($('.knock'))return;play('knock');
  setTimeout(()=>document.body.classList.remove('knocking'),900);
  setTimeout(()=>k.classList.add('out'),reducedMotion?2800:3000);setTimeout(()=>k.remove(),reducedMotion?3000:3500);}
 /** Pizza lands on the roof (the navbar), bounces once, stays a moment. */
-export function pizza(){toast(COPY.eggs.logo);const d=document.createElement('div');d.className='pizza';d.setAttribute('aria-hidden','true');d.innerHTML=prop('pizzaRoof');document.body.append(d);
+export function pizza(){play('thump');toast(COPY.eggs.logo);const d=document.createElement('div');d.className='pizza';d.setAttribute('aria-hidden','true');d.innerHTML=prop('pizzaRoof');document.body.append(d);
  setTimeout(()=>d.classList.add('out'),2400);setTimeout(()=>d.remove(),2900);}
 /** Wires both eggs. Logo egg is home-only (on other pages a logo click navigates). */
 export function initEggs(){let n=0,tm,k=0;

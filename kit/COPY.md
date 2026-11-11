@@ -64,7 +64,8 @@ Voice: confident, dry, a little menacing, always clear about what the button doe
 - Sub: "This page doesn't exist." Button: "Back to the lab"
 
 ## Misc
-- Sound toggle: "Sound off" / "Sound on"
+- Sound toggle (navbar, `nav.*` in copy.js): visible state "Sound off" / "Sound on"; aria-label "Sound"; options button aria-label "Sound options".
+- Sound options popover: heading "Volume", steps "Low" / "Medium" / "High"; ambience row "Desert wind" with state "Off" / "On"; note "Off while reduced motion is on."
 - Reduced motion note: none needed.
 - Easter egg line (Konami): "I am the one who knocks."
 - Easter egg (logo ×5): "Pizza's on the roof."

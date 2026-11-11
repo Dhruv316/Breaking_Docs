@@ -316,3 +316,34 @@ body.knocking::before{content:"";position:fixed;inset:0;z-index:149;pointer-even
 .credit--foot{--cfs:min(24px,calc((100vw - 40px)/15));display:none;justify-content:flex-start}
 @media(max-width:600px){.topbar .credit{display:none}.footer .credit--foot{display:flex}}
 @media(prefers-reduced-motion:reduce){.credit:hover .ct{transform:none}}
+
+/* ---- Round 1B-2: drawn prop art (js/props-art.js). Only two things move, and only with transform/opacity ---- */
+.pa-sp,.pa-bub{transform-box:fill-box;transform-origin:center}
+.pa-sp{animation:pa-tw 2.6s ease-in-out infinite;animation-delay:var(--d,0s)}
+.pa-bub{animation:pa-rise 3.2s ease-in infinite;animation-delay:var(--d,0s)}
+@keyframes pa-tw{0%,100%{opacity:.3;transform:scale(.55)}50%{opacity:1;transform:scale(1.1)}}
+@keyframes pa-rise{0%{opacity:0;transform:translateY(5px)}25%{opacity:.9}100%{opacity:0;transform:translateY(-12px)}}
+html.sc-hidden .pa-sp,html.sc-hidden .pa-bub{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){.pa-sp,.pa-bub{animation:none;opacity:1;transform:none}}
+
+/* ---- Round 2A: navbar sound control (always visible) + options popover ---- */
+.snd{position:relative;display:flex;align-items:center;gap:4px}
+.sound{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition:color .15s,border-color .15s}
+.sound:hover{color:var(--hazmat);border-color:var(--hazmat)}
+.snd-main{min-width:48px}.snd-main .snd-w{display:none}.snd-main .snd-x{display:inline}
+.snd-main[aria-pressed="true"]{color:var(--hazmat);border-color:var(--hazmat)}
+.snd-main[aria-pressed="true"] .snd-w{display:inline}.snd-main[aria-pressed="true"] .snd-x{display:none}
+.snd-more{padding:0;min-width:36px}.snd-more svg{transition:transform .15s var(--ease)}.snd-more[aria-expanded="true"] svg{transform:rotate(180deg)}
+.snd-pop{position:absolute;right:0;top:calc(100% + 14px);z-index:70;width:min(268px,calc(100vw - 32px));display:grid;gap:10px;padding:14px;background:#000;border:2px solid var(--dust);box-shadow:0 5px 0 #000a,0 16px 32px #000c}
+.snd-pop[hidden]{display:none}
+.snd-h{font:600 var(--t-s) var(--f-mono);color:var(--dust);text-transform:uppercase;letter-spacing:.08em}
+.snd-vol{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.snd-v,.snd-amb{min-height:48px;font:600 var(--t-s) var(--f-mono);color:var(--dust);background:none;border:2px solid var(--dust);cursor:pointer}
+.snd-v:hover,.snd-amb:hover:not(:disabled){border-color:var(--hazmat);color:var(--hazmat)}
+.snd-v[aria-pressed="true"]{background:var(--hazmat);border-color:var(--hazmat);color:var(--heisenberg)}
+.snd-amb{display:flex;align-items:center;justify-content:space-between;padding:0 14px}
+.snd-amb[aria-pressed="true"]{border-color:var(--hazmat);color:var(--hazmat)}
+.snd-amb:disabled{opacity:.6;cursor:not-allowed}
+.snd-note{font:var(--t-s)/1.4 var(--f-mono);color:var(--dust)}.snd-note[hidden]{display:none}
+@media(max-width:700px){.snd-t{display:none}.topbar .wrap{gap:10px}.snd-more{min-width:48px}}
+.snd-i,.snd-more svg{flex:none}

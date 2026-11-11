@@ -93,7 +93,7 @@ All delivered files sit FLAT in `/assets/` (no subfolders). Use exactly these na
 **Missing → use themed CSS/SVG placeholders, never block:**
 - Backgrounds: bg-desert-sunset, bg-desert-night, bg-lab-interior, bg-rv-desert, bg-office-albuquerque → build these as rich CSS/SVG scenes (gradients, silhouettes of mesa/cactus/RV/lab glassware, grain overlay), using the same asset paths in assets.js so real photos can replace them later.
 - Props: glasses, hazmat-suit, gas-mask, barrel, blue-crystals, flask, cash-pile, cactus, tumbleweed → draw as inline SVG.
-- All audio and video → skip. Keep sound.js and the toggle, but hide the toggle if no audio files exist. No video: hero uses a CSS heat-shimmer animation instead.
+- Video → skip; the hero uses a CSS heat-shimmer instead. Audio → no files needed any more: since Round 2A every sound is synthesized with Web Audio in `js/sound.js` (the navbar toggle is always visible).
 
 **Character notes:** cutouts have transparent backgrounds and different crops (some are head-and-shoulders, some full body). Use CSS object-fit/position and mask-image fades so crops look intentional. Characters are real photos: place them large and let them bleed off the edge of the frame, with a vignette and a tinted overlay so they sit inside the scene.
 **Page assignments:** Home: char-heisenberg. Image to PDF: char-jesse. Compress: char-walter-hazmat. PPT to PDF: char-saul. 404: char-green-shirt-fullbody (Gus stays in the footer). Konami egg: char-green-shirt-gun. Errors: char-mike. Coming-soon tiles: char-hank. About/footer strip: char-skyler, char-walter-jr, char-saul-alt (optional small cameo).
@@ -102,5 +102,7 @@ All delivered files sit FLAT in `/assets/` (no subfolders). Use exactly these na
 ## PHASE 5 — how real files drop in (authoritative)
 - Backgrounds: `scene(key)` in `/js/assets.js` always paints the placeholder first. When `ASSETS.bg.<key>.present` is `true`, the real `<img>` is laid on top; if it fails to load it removes itself and the placeholder shows. To go live: put `bg-<name>.jpg` in `/assets` and flip that one flag to `true`. Nothing else changes (the PPT page no longer has an office mount).
 - Custom placeholders per key live in the `PLACEHOLDERS` map in assets.js (`office` → `office-decor.js`).
-- Audio: put `sfx-click.mp3`, `sfx-drop.mp3`, `sfx-bubbling.mp3`, `sfx-success.mp3`, `sfx-error.mp3`, `sfx-knock.mp3` and/or `music-theme-loop.mp3` in `/assets` and set `present:true`. The navbar sound toggle appears automatically; it starts OFF.
+- Audio: superseded in Round 2A. Section E is no longer used; there is no `ASSETS.audio` manifest and no audio file to supply. All sound is synthesized (see DESIGN.md, Round 2A).
 - Still placeholders: bg sunset / night / lab / rv(drawn) / office, props glasses / hazmat-suit / gas-mask / barrel / blue-crystals / flask / cash-pile / cactus / tumbleweed, all audio, all video.
+
+- Round 1B-1: `sunset`, `night`, `lab` now render through `LAYERED` in assets.js (`js/scenes.js`: layered, parallax-ready SVG/CSS); `office` still uses `PLACEHOLDERS` but is layered too (`js/office-decor.js`). `rv` (drawn) keeps the old `desert()` placeholder. Real JPGs, when switched on, still replace all of these.

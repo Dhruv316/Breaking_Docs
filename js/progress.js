@@ -18,7 +18,7 @@ export function createRvProgress(host,{onCancel}={}){
   <div class="rvp-road" aria-hidden="true">
    <div class="rvp-sky"></div><div class="rvp-cacti"><span>${prop('cactus')}</span><span>${prop('cactus')}</span><span>${prop('cactus')}</span></div>
    <div class="rvp-lane"><i class="rvp-dash"></i></div>
-   <div class="rvp-rv" style="left:0%"><span class="rvp-dust"></span><span class="rvp-body">${prop('rv','','',true)}</span></div>
+   <div class="rvp-rv" style="--p:0"><span class="rvp-dust"></span><span class="rvp-body">${prop('rv','','',true)}</span></div>
    <div class="rvp-flag">${prop('blueCrystals')}</div>
   </div>
   <div class="rvp-bot"><span class="rvp-line mono"></span><span class="rvp-detail mono"></span></div>
@@ -35,11 +35,11 @@ export function createRvProgress(host,{onCancel}={}){
   set(fraction,d=''){
    const p=Math.round(clamp(fraction,0,1)*100);
    meter.setAttribute('aria-valuenow',p);pct.textContent=p+'%';
-   rv.style.left=`calc(${p}% - var(--rv-w) * ${p/100})`;     // RV width comes from --rv-w (components.css): keeps it inside the road at 100%
+   rv.style.setProperty('--p',p/100);     // css/motion.css turns --p into a translateX on a track one RV-width shorter than the road: stays inside the road at 100%
    detail.textContent=d;
    if(p-lastSaid>=10||p===100){lastSaid=p;live.textContent=`${p}%${d?' — '+d:''}`;}
   },
-  start(){lastSaid=-10;bar.classList.add('is-running');pct.textContent='0%';rv.style.left='0%';detail.textContent='';cycle();clearInterval(timer);timer=setInterval(cycle,2600);},
+  start(){lastSaid=-10;bar.classList.add('is-running');pct.textContent='0%';rv.style.setProperty('--p',0);detail.textContent='';cycle();clearInterval(timer);timer=setInterval(cycle,2600);},
   stop(){bar.classList.remove('is-running');clearInterval(timer);timer=null;},
   destroy(){clearInterval(timer);host.replaceChildren();}
  };

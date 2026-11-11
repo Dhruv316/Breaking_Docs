@@ -1,23 +1,118 @@
-/* sound.js — audio manager. OFF by default, never autoplays, and does nothing unless real files are present in ASSETS.audio.
-   Public API: available(), isOn(), setOn(bool), play(name), loopStart(name), loopStop(name). Failures are swallowed on purpose. */
-import {ASSETS,hasAudio} from './assets.js';
-let on=false;const cache=new Map(),loops=new Map();
-const THEME_VOL=.25,SFX_VOL=.7;
-/** @returns {boolean} true when at least one audio file exists (the navbar toggle is only rendered then) */
-export const available=()=>hasAudio();
-/** @returns {boolean} current toggle state (in memory only) */
+/* sound.js — Web Audio synthesizer. No audio files.
+   OFF by default, never autoplays, and the AudioContext is only created after a user gesture (and only once sound is on).
+   Public API (all safe to call at any time, all fail silently): play(name), loopStart(name), loopStop(name), setOn(bool), isOn(),
+   setVolume(0|1|2), getVolume(), setAmbience(bool), isAmbience(), ambienceAllowed(), available(), onChange(fn); also the `sound` object.
+   One-shots: click, drop, success, error, knock, thump, tile + curtain (title-card intro). Loops: bubbling (only while processing), ambience (desert wind, own toggle).
+   Safety: every voice has a >=4 ms attack and an exponential release, per-voice peaks are <=0.3, the master volume is capped at 1 and
+   everything runs through a hard limiter. Ambience ducks under one-shots. Preferences persist in localStorage (try/catch; blocked = off). */
+import {store} from './ui-kit.js';
+const KEY='bd.sound.v1',STEPS=[.4,.7,1];
+const RMQ=matchMedia('(prefers-reduced-motion: reduce)');
+const AC=typeof window!=='undefined'?(window.AudioContext||window.webkitAudioContext):null;
+let on=false,vol=1,amb=false,gestured=false,dead=!AC;   // vol = index into STEPS
+let ctx=null,master,sfx,ambBus,ambDuck,noise,brown;
+const wanted=new Set(),running=new Map(),subs=new Set(),last={};
+try{const p=JSON.parse(store.get(KEY)||'null');if(p&&typeof p==='object'){on=p.on===true;vol=[0,1,2].includes(p.vol)?p.vol:1;amb=p.amb===true;}}catch{}
+if(RMQ.matches)amb=false;
+const save=()=>store.set(KEY,JSON.stringify({on,vol,amb}));
+const emit=()=>subs.forEach(f=>{try{f()}catch{}});
+/** @returns {boolean} true when this browser can make sound at all */
+export const available=()=>!dead;
 export const isOn=()=>on;
-function get(name){const a=ASSETS.audio[name];if(!a||!a.present)return null;
- if(!cache.has(name)){const el=new Audio();el.preload='none';el.src=a.src;el.addEventListener('error',()=>{a.present=false;cache.delete(name);},{once:true});cache.set(name,el);}
- return cache.get(name);}
-/** Plays a one-shot effect. No-op when sound is off or the file is missing. */
-export function play(name){if(!on)return;const el=get(name);if(!el)return;
- try{el.volume=SFX_VOL;el.currentTime=0;el.play()?.catch(()=>{});}catch{}}
-/** Starts a looping sound (bubbling while processing). */
-export function loopStart(name){if(!on)return;const el=get(name);if(!el||loops.has(name))return;
- try{el.loop=true;el.volume=name==='theme'?THEME_VOL:SFX_VOL*.6;el.play()?.catch(()=>{});loops.set(name,el);}catch{}}
-/** Stops a looping sound. */
-export function loopStop(name){const el=loops.get(name);if(!el)return;try{el.pause();el.currentTime=0;}catch{}loops.delete(name);}
-/** Turns all sound on/off. Turning on may start the optional theme loop (only from a user gesture). */
-export function setOn(v){on=!!v;if(on)loopStart('theme');else[...loops.keys()].forEach(loopStop);return on;}
-document.addEventListener('visibilitychange',()=>{if(document.hidden)loops.forEach(e=>e.pause());else if(on)loops.forEach(e=>e.play()?.catch(()=>{}));});
+export const getVolume=()=>vol;
+export const isAmbience=()=>amb&&!RMQ.matches;
+/** Ambience is never allowed under prefers-reduced-motion. */
+export const ambienceAllowed=()=>!RMQ.matches;
+/** Subscribe to state changes (toggle, volume, ambience). */
+export const onChange=f=>{subs.add(f);return()=>subs.delete(f);};
+
+/* ---------- graph ---------- */
+function buildNoise(c){const n=c.sampleRate*2,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;noise=b;
+ const m=c.sampleRate*6,bb=c.createBuffer(1,m,c.sampleRate),e=bb.getChannelData(0);let y=0;
+ for(let i=0;i<m;i++){y=(y+.02*(Math.random()*2-1))/1.02;e[i]=y*3.2;}
+ const f=c.sampleRate*.5|0;for(let i=0;i<f;i++){const k=i/f;e[m-f+i]=e[m-f+i]*(1-k)+e[i]*k;}   // crossfade the seam so the loop never clicks
+ brown=bb;}
+/** Creates the context. Only runs after a user gesture; returns false (silently) when impossible. */
+function ensure(){if(dead||!gestured)return false;
+ try{if(!ctx){ctx=new AC({latencyHint:'interactive'});buildNoise(ctx);
+   master=ctx.createGain();master.gain.value=0;
+   const lim=ctx.createDynamicsCompressor();lim.threshold.value=-14;lim.knee.value=0;lim.ratio.value=20;lim.attack.value=.003;lim.release.value=.12;
+   sfx=ctx.createGain();ambBus=ctx.createGain();ambDuck=ctx.createGain();
+   sfx.connect(master);ambBus.connect(ambDuck);ambDuck.connect(master);const out=ctx.createGain();out.gain.value=.45;   // final trim: the compressor adds make-up gain, this keeps even High well under full scale
+   master.connect(lim);lim.connect(out);out.connect(ctx.destination);}
+  if(ctx.state==='suspended')ctx.resume().catch(()=>{});
+  return true;}catch{dead=true;ctx=null;return false;}}
+const ready=()=>{try{return !!ctx&&ctx.state!=='closed';}catch{return false;}};
+const T=()=>ctx.currentTime;
+/** Attack then exponential release; never starts or ends at a hard zero. */
+function env(g,t,peak,a,d){g.setValueAtTime(.0001,t);g.linearRampToValueAtTime(Math.min(peak,.3),t+a);g.exponentialRampToValueAtTime(.0001,t+a+d);}
+function tone({type='sine',f0,f1=f0,t=0,a=.006,d=.1,peak=.1,dest=sfx,lp=0}){const s=T()+t,o=ctx.createOscillator(),g=ctx.createGain();o.type=type;o.frequency.setValueAtTime(f0,s);
+ if(f1!==f0)o.frequency.exponentialRampToValueAtTime(f1,s+a+d);env(g.gain,s,peak,Math.max(a,.004),d);
+ let n=o;if(lp){const f=ctx.createBiquadFilter();f.type='lowpass';f.frequency.value=lp;o.connect(f);n=f;}n.connect(g);g.connect(dest);o.start(s);o.stop(s+a+d+.04);}
+function puff({t=0,a=.004,d=.06,peak=.08,freq=600,q=.8,type='bandpass',dest=sfx}){const s=T()+t,src=ctx.createBufferSource(),f=ctx.createBiquadFilter(),g=ctx.createGain();
+ src.buffer=noise;f.type=type;f.frequency.value=freq;f.Q.value=q;env(g.gain,s,peak,a,d);src.connect(f);f.connect(g);g.connect(dest);src.start(s,Math.random()*1.5);src.stop(s+a+d+.04);}
+function duck(sec){if(!ambDuck||!running.has('ambience'))return;const n=T();ambDuck.gain.cancelScheduledValues(n);ambDuck.gain.setTargetAtTime(.3,n,.03);ambDuck.gain.setTargetAtTime(1,n+sec,.4);}
+
+/* ---------- one-shots ---------- */
+const SFX={
+ click(){tone({f0:900,f1:520,d:.05,peak:.09,lp:3200});puff({freq:2400,q:1,d:.02,peak:.02});return .12;},
+ drop(){tone({f0:150,f1:48,d:.2,peak:.3,lp:400,a:.005});puff({freq:380,type:'lowpass',d:.07,peak:.1});tone({f0:620,f1:380,t:.012,d:.05,peak:.03});return .35;},
+ success(){[523.25,659.25,783.99,1046.5].forEach((f,i)=>{tone({f0:f,t:i*.09,a:.01,d:.55,peak:.1});tone({f0:f*2,t:i*.09,a:.01,d:.3,peak:.025});});return 1.1;},
+ error(){[0,.17].forEach(t=>{tone({type:'sawtooth',f0:110,t,a:.012,d:.13,peak:.08,lp:700});tone({type:'square',f0:116.5,t,a:.012,d:.13,peak:.04,lp:700});});return .5;},
+ knock(){[0,.2,.4].forEach((t,i)=>{tone({f0:190-i*8,f1:80,t,d:.12,peak:.3,lp:520,a:.004});puff({t,freq:650,q:1.2,d:.05,peak:.12});});return .8;},
+ thump(){[.62,.9].forEach((t,i)=>{tone({f0:130,f1:50,t,d:.16,peak:.26-i*.1,lp:380,a:.005});puff({t,freq:320,type:'lowpass',d:.06,peak:.07-i*.03});});return 1.2;}};
+SFX.tile=function(){tone({f0:230,f1:70,d:.16,peak:.2,lp:520,a:.005});puff({freq:1900,q:1.2,d:.05,peak:.035});tone({f0:1320,f1:990,t:.03,a:.01,d:.28,peak:.035});return .4;};
+SFX.curtain=function(){puff({type:'bandpass',freq:520,q:.7,a:.06,d:.5,peak:.07});tone({f0:392,t:.04,a:.03,d:.55,peak:.05});tone({f0:587.33,t:.12,a:.03,d:.5,peak:.04});return .8;};
+/** Plays a one-shot. No-op when sound is off, not yet allowed, or unsupported. */
+export function play(name){try{if(!on||!SFX[name])return;if(!ensure()||!ready())return;
+ const n=performance.now();if(n-(last[name]||0)<45)return;last[name]=n;   // ignore machine-gun repeats
+ if(ctx.state==='suspended')return;duck(SFX[name]()+.2);}catch{}}
+
+/* ---------- loops ---------- */
+function startBubbling(){const g=ctx.createGain();g.gain.value=0;g.connect(sfx);g.gain.setTargetAtTime(1,T(),.15);
+ const bed=ctx.createBufferSource(),lp=ctx.createBiquadFilter(),bg=ctx.createGain();bed.buffer=brown;bed.loop=true;lp.type='lowpass';lp.frequency.value=420;bg.gain.value=.05;bed.connect(lp);lp.connect(bg);bg.connect(g);bed.start(0,Math.random()*4);
+ let timer=0,dead2=false;const tick=()=>{if(dead2)return;try{if(ctx.state==='running'){const f=260+Math.random()*560;
+   tone({f0:f,f1:f*(1.45+Math.random()*.5),a:.005,d:.05+Math.random()*.07,peak:.04+Math.random()*.05,dest:g,lp:2600});
+   if(Math.random()<.25)tone({f0:110+Math.random()*80,f1:220,a:.008,d:.1,peak:.05,dest:g,lp:600});}}catch{}
+  timer=setTimeout(tick,80+Math.random()*240);};tick();
+ return()=>{dead2=true;clearTimeout(timer);try{g.gain.setTargetAtTime(0,T(),.1);setTimeout(()=>{try{bed.stop();g.disconnect();}catch{}},700);}catch{}};}
+function startAmbience(){const src=ctx.createBufferSource(),bp=ctx.createBiquadFilter(),g=ctx.createGain();src.buffer=brown;src.loop=true;bp.type='bandpass';bp.frequency.value=480;bp.Q.value=.6;g.gain.value=.0001;
+ src.connect(bp);bp.connect(g);g.connect(ambBus);src.start(0,Math.random()*4);
+ const w2=ctx.createBufferSource(),hp=ctx.createBiquadFilter(),g2=ctx.createGain();w2.buffer=noise;w2.loop=true;hp.type='bandpass';hp.frequency.value=1500;hp.Q.value=5;g2.gain.value=.002;w2.connect(hp);hp.connect(g2);g2.connect(ambBus);w2.start(0,Math.random());
+ const lfo=(rate,depth,param)=>{const o=ctx.createOscillator(),d=ctx.createGain();o.frequency.value=rate;d.gain.value=depth;o.connect(d);d.connect(param);o.start();return o;};
+ const l=[lfo(.07,170,bp.frequency),lfo(.11,.035,g.gain),lfo(.05,.0035,g2.gain),lfo(.09,300,hp.frequency)];
+ g.gain.setTargetAtTime(.075,T(),1.2);ambDuck.gain.setValueAtTime(1,T());
+ return()=>{try{g.gain.cancelScheduledValues(T());g.gain.setTargetAtTime(0,T(),.4);g2.gain.cancelScheduledValues(T());g2.gain.setTargetAtTime(0,T(),.4);
+  setTimeout(()=>{try{src.stop();w2.stop();l.forEach(o=>o.stop());g.disconnect();g2.disconnect();}catch{}},2200);}catch{}};}
+const LOOPS={bubbling:startBubbling,ambience:startAmbience};
+const wantNow=n=>n==='ambience'?(on&&isAmbience()):(on&&wanted.has(n));
+/** Reconciles which loops should be running with which are. */
+function sync(){try{
+ if(!ready()){return;}
+ const hidden=document.hidden;
+ if(master)master.gain.setTargetAtTime(on?STEPS[vol]:0,T(),.06);
+ for(const n of Object.keys(LOOPS)){const should=wantNow(n)&&!hidden;
+  if(should&&!running.has(n)&&ctx.state!=='closed')running.set(n,LOOPS[n]());
+  else if(!should&&running.has(n)){running.get(n)();running.delete(n);}}
+ if(hidden||!on){clearTimeout(sync.t);sync.t=setTimeout(()=>{try{if((document.hidden||!on)&&ctx.state==='running')ctx.suspend().catch(()=>{});}catch{}},on?200:900);}
+ else{clearTimeout(sync.t);if(ctx.state==='suspended')ctx.resume().catch(()=>{});}}catch{}}
+/** Starts a loop (bubbling while processing). Only audible while sound is on; remembered so turning sound on mid-job joins in. */
+export function loopStart(name){if(!LOOPS[name]||name==='ambience')return;wanted.add(name);if(on&&ensure())sync();}
+/** Stops a loop with a short fade. */
+export function loopStop(name){wanted.delete(name);sync();}
+
+/* ---------- state ---------- */
+/** Turns all sound on/off (call from a user gesture to start the AudioContext). */
+export function setOn(v){on=!!v;if(on){gestured=true;ensure();}save();sync();emit();return on;}
+/** @param {0|1|2} i Low / Medium / High. */
+export function setVolume(i){vol=[0,1,2].includes(i)?i:1;save();sync();emit();return vol;}
+/** Desert-wind ambience. Refused (stays off) under prefers-reduced-motion. */
+export function setAmbience(v){amb=!!v&&!RMQ.matches;save();if(on&&amb){gestured=true;ensure();}sync();emit();return amb;}
+export const sound={play,loopStart,loopStop,setOn,isOn,setVolume,getVolume,setAmbience,isAmbience,ambienceAllowed,available,onChange};
+
+/* first user gesture unlocks audio; a remembered "on" then becomes audible without another click */
+const arm=()=>{gestured=true;removeEventListener('pointerdown',arm,true);removeEventListener('keydown',arm,true);removeEventListener('touchend',arm,true);removeEventListener('click',arm,true);if(on){ensure();sync();}};
+if(typeof window!=='undefined')['pointerdown','keydown','touchend','click'].forEach(e=>addEventListener(e,arm,{capture:true,passive:true}));
+document.addEventListener('visibilitychange',sync);
+const rmChange=()=>{if(RMQ.matches&&amb){amb=false;save();}sync();emit();};
+RMQ.addEventListener?.('change',rmChange);

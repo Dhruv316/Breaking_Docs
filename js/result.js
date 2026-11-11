@@ -2,6 +2,21 @@
 import {scene,char,prop} from './assets.js';
 import {COPY,t} from './copy.js';
 import {fill,esc,formatBytes} from './format.js';
+import {reducedMotion} from './ui-kit.js';
+
+/** One burst of ~30 crystal shards from behind the stamp, timed to the slam's impact (.43 s after the panel appears). Pure decoration: aria-hidden,
+ *  pointer-events none, transform/opacity animation, removed after 1.5 s. Skipped under reduced motion. Runs once per result screen. */
+function burst(host){
+ if(reducedMotion||!('ResizeObserver'in window))return;
+ const stamp=host.querySelector('.stamp');if(!stamp)return;
+ const ro=new ResizeObserver(()=>{const r=stamp.getBoundingClientRect();if(!r.width||!r.height)return;   // fires when the (hidden) panel is first shown
+  ro.disconnect();const hr=host.getBoundingClientRect(),cx=r.left-hr.left+r.width/2,cy=r.top-hr.top+r.height/2;
+  const wrap=document.createElement('div');wrap.className='res-burst';wrap.setAttribute('aria-hidden','true');
+  const reach=Math.min(240,Math.max(110,hr.width*.34));let h='';
+  for(let i=0;i<30;i++){const a=(i/30)*Math.PI*2+Math.random()*.35,d=reach*(.45+Math.random()*.55);
+   h+=`<i style="--x:${cx.toFixed(1)}px;--y:${cy.toFixed(1)}px;--s:${(7+Math.random()*9).toFixed(1)}px;--dx:${(Math.cos(a)*d*1.25).toFixed(1)}px;--dy:${(Math.sin(a)*d*.8+28+Math.random()*34).toFixed(1)}px;--r:${Math.round(-220+Math.random()*440)}deg;--d:${(.43+Math.random()*.04).toFixed(3)}s"></i>`;}
+  wrap.innerHTML=h;host.append(wrap);setTimeout(()=>wrap.remove(),1500);});
+ ro.observe(stamp);setTimeout(()=>ro.disconnect(),30000);}
 
 /**
  * Renders the result into `host`.
@@ -29,5 +44,6 @@ export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,not
   </div>`;
  host.querySelector('.res-again').addEventListener('click',()=>onAgain&&onAgain());
  host.querySelector('.res-head').focus({preventScroll:true});
+ burst(host);
  return {destroy(){URL.revokeObjectURL(url);host.replaceChildren();}};
 }

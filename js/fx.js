@@ -22,9 +22,11 @@ function reveal(){const els=[...document.querySelectorAll('.reveal')];if(!els.le
  if(reducedMotion||!('IntersectionObserver'in window)){els.forEach(e=>e.classList.add('in'));return;}
  const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target);}}),{threshold:.2});els.forEach(e=>io.observe(e));}
 /** Sound cues driven by DOM state, so tool modules need no changes: clicks, drops, processing loop, success, error. */
-function cues(){document.addEventListener('click',e=>{if(e.target.closest('.btn,.tile,.sound,.nav a'))play('click');},true);
+function cues(){document.addEventListener('click',e=>{const b=e.target.closest('button,.btn,.tile,.nav a');if(b&&!b.disabled&&b.getAttribute('aria-disabled')!=='true')play('click');},true);
  document.addEventListener('drop',()=>play('drop'),true);
  const t=$('#tool');if(!t)return;let last=t.dataset.state;
+ const m=$('#msgs');if(m)new MutationObserver(r=>{if(r.some(x=>x.addedNodes.length))play('error');}).observe(m,{childList:true});   // themed warnings
+
  new MutationObserver(()=>{const s=t.dataset.state;if(s===last)return;last=s;
   s==='processing'?loopStart('bubbling'):loopStop('bubbling');if(s==='done')play('success');if(s==='error')play('error');}).observe(t,{attributes:true,attributeFilter:['data-state']});}
 /** Per-page flags for CSS tuning (grain, vignette). */

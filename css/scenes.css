@@ -1,0 +1,85 @@
+/* scenes.css — layered SVG/CSS scenes (sunset, night, lab, office) + their motion.
+   Motion rules: transform and opacity only. Parallax transforms are set by js/scenes.js (translate3d on .sc-l layers).
+   Paused when the tab is hidden (html.sc-hidden) or the scene is off-screen (.sc-off); off entirely under prefers-reduced-motion;
+   below 768px every [data-full] layer is removed and ambient motion is trimmed. */
+.sc{position:absolute;inset:0;overflow:hidden;--gh:min(88%,max(340px,46vw));--sx0:61%;--sy0:calc(var(--gh)*.5);--sw:clamp(90px,12vw,190px)}
+.sc-l{position:absolute;inset:-30px -50px 0;transition:transform .3s ease-out}
+.sc-l>svg{position:absolute;inset:0;width:100%;height:100%}
+.sc-far,.sc-mid,.sc-fg{inset:auto -50px 0 -50px;height:var(--gh)}
+.sc-sunwrap,.sc-dustwrap,.sc-flare,.sc-moonwrap,.sc-steamwrap,.sc-lbeams{inset:0 -50px}
+.sc.sc-on .sc-l{will-change:transform}
+.sc-hidden .sc *,.sc.sc-off *{animation-play-state:paused!important}
+.sc *{pointer-events:none}
+
+/* ═════ Desert sunset (Home hero) ═════ */
+.sc-sky{background:linear-gradient(180deg,#160a2a 0,#43183a 22%,#8a2a30 42%,#c8602a 56%,#f0a040 68%,#ffd36a 76%,#e8903a 100%)}
+.sc-sun,.sc-halo,.sc-rays{position:absolute;left:var(--sx0);bottom:var(--sy0);border-radius:50%}
+.sc-sun{width:var(--sw);height:var(--sw);margin:0 0 calc(var(--sw)/-2) calc(var(--sw)/-2);background:radial-gradient(circle,#fffbe6 0 42%,#ffe38a 68%,#ffc24a 100%);box-shadow:0 0 50px 14px #ffd36aaa}
+.sc-halo{width:calc(var(--sw)*4.6);height:calc(var(--sw)*4.6);margin:0 0 calc(var(--sw)*-2.3) calc(var(--sw)*-2.3);background:radial-gradient(circle,#ffd36a88 0,#f08a3066 20%,#e07b2a26 38%,transparent 62%)}
+.sc-rays{--rs:min(2400px,190vmax);width:var(--rs);height:var(--rs);margin:0 0 calc(var(--rs)/-2) calc(var(--rs)/-2);opacity:.4;border-radius:0;
+ background:repeating-conic-gradient(from 0deg,#ffd68a2e 0 2.2deg,transparent 2.2deg 8deg,#ffb45a22 8deg 9.5deg,transparent 9.5deg 17deg);
+ -webkit-mask-image:radial-gradient(circle,#000 0,#0008 28%,transparent 60%);mask-image:radial-gradient(circle,#000 0,#0008 28%,transparent 60%);animation:scRays 180s linear infinite}
+@keyframes scRays{to{transform:rotate(360deg)}}
+.sc-dust{position:absolute;width:var(--s);height:var(--s);border-radius:50%;background:#ffe0a8;opacity:0;animation:scDust var(--t) linear var(--d) infinite}
+@keyframes scDust{0%{opacity:0;transform:translate3d(0,0,0)}15%{opacity:.7}85%{opacity:.45}100%{opacity:0;transform:translate3d(var(--dx),var(--dy),0)}}
+.sc-shimmer{position:absolute;left:0;right:0;bottom:calc(var(--gh)*.5);height:calc(var(--gh)*.2);z-index:1;opacity:.34;mix-blend-mode:screen;
+ background:repeating-linear-gradient(0deg,transparent 0 7px,#ffd9902e 7px 9px,transparent 9px 16px);
+ -webkit-mask-image:linear-gradient(transparent,#000 35%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 35%,#000 70%,transparent);animation:scHeat 5.5s ease-in-out infinite}
+@keyframes scHeat{0%,100%{transform:translate3d(0,0,0) skewX(0) scaleY(1)}25%{transform:translate3d(6px,0,0) skewX(.8deg) scaleY(1.04)}50%{transform:translate3d(-5px,0,0) skewX(-.6deg) scaleY(.97)}75%{transform:translate3d(3px,0,0) skewX(.5deg) scaleY(1.02)}}
+.hero:has(.sc--sunset) .shimmer{display:none}   /* the old flat shimmer band: the scene now draws its own */
+.sc-flare::before{content:"";position:absolute;left:0;right:0;bottom:var(--sy0);height:2px;background:linear-gradient(90deg,transparent 10%,#ffd68a55 40%,#fff3c866 68%,#ffd68a55 80%,transparent 95%);opacity:.5}
+.sc-flare i{position:absolute;left:calc(var(--sx0) + (50% - var(--sx0))*var(--k)*2.2);bottom:calc(var(--sy0) + (42% - var(--sy0))*var(--k)*2.2);
+ width:calc(var(--r)*2);height:calc(var(--r)*2);margin:calc(var(--r)*-1) 0 0 calc(var(--r)*-1);border-radius:50%;mix-blend-mode:screen;
+ background:radial-gradient(circle,#ffd89a38 0,#ff9a5a1c 52%,transparent 70%);animation:scFlare 7s ease-in-out infinite alternate}
+.sc-flare i:nth-child(even){background:radial-gradient(circle,transparent 58%,#ffc27a30 64%,transparent 72%);animation-delay:-3s}
+@keyframes scFlare{from{opacity:.45}to{opacity:1}}
+
+/* ═════ Desert night (footer, 404, dark sections) ═════ */
+.sc--night{--gh:min(100%,max(210px,28vw))}
+.sc-nsky{background:linear-gradient(180deg,#020615 0,#0b1a3c 50%,#26457a 100%)}
+.sc-nsky,.sc-stars{inset:-30px -50px 0}
+.sc-tw{animation:scTw 4s ease-in-out infinite}
+.sc-tw1{animation-duration:3.4s}.sc-tw2{animation-duration:4.8s;animation-delay:-1.2s}.sc-tw3{animation-duration:6.2s;animation-delay:-2.6s}
+@keyframes scTw{0%,100%{opacity:.25}50%{opacity:1}}
+.sc-moon{position:absolute;right:12%;top:var(--moon-top,11%);width:clamp(56px,7vw,100px);aspect-ratio:1;border-radius:50%;
+ background:radial-gradient(circle at 62% 60%,#8f9bc455 0 9%,transparent 10%),radial-gradient(circle at 32% 66%,#8f9bc444 0 6%,transparent 7%),radial-gradient(circle at 54% 26%,#8f9bc440 0 5%,transparent 6%),radial-gradient(circle at 36% 34%,#fffef4,#e9ecfb 55%,#b2bde0 100%);
+ box-shadow:inset -10px -8px 14px #7e8bb844}
+.sc-moon::before{content:"";position:absolute;inset:-140%;border-radius:50%;background:radial-gradient(circle,#d4e0ff88 0,#8fa6ee44 30%,transparent 62%)}
+.footer .sc--night{--moon-top:16px}.nf .sc--night{--moon-top:12%}
+.tools .sc--night .sc-moon,.tools .sc--night .sc-moon::before{opacity:.6}
+.sc-mist{inset:auto -10% 0 -10%;height:calc(var(--gh)*.5)}
+.sc-mist i{position:absolute;inset:0;background:radial-gradient(ellipse 38% 55% at 24% 82%,#8aa4e058,transparent 70%),radial-gradient(ellipse 42% 50% at 74% 88%,#8aa4e04c,transparent 70%);animation:scMist 38s ease-in-out infinite alternate}
+.sc-mist i+i{animation-duration:52s;animation-direction:alternate-reverse;opacity:.7}
+@keyframes scMist{from{transform:translate3d(-5%,0,0)}to{transform:translate3d(5%,0,0)}}
+
+/* ═════ Lab interior (Home "About" strip) ═════ */
+.sc-lwall{background:radial-gradient(ellipse at 50% 38%,#0f5a4a 0,#06281f 52%,#020a07 100%)}
+.sc-lbeams i{position:absolute;top:-10%;height:125%;width:15vw;mix-blend-mode:screen;background:linear-gradient(180deg,#55d0ff3a,#3fe0a01a 45%,transparent 85%);transform:skewX(-14deg);animation:scBeam 8s ease-in-out infinite alternate}
+.sc-lbeams i:nth-child(1){left:10%}.sc-lbeams i:nth-child(2){left:44%;animation-delay:-3s}.sc-lbeams i:nth-child(3){left:76%;animation-delay:-5s}
+@keyframes scBeam{from{opacity:.5}to{opacity:1}}
+.sc-steam{position:absolute;bottom:20%;width:var(--w);height:calc(var(--w)*2.2);border-radius:50%;opacity:0;background:radial-gradient(ellipse,#dcfff0 0,#dcfff044 40%,transparent 70%);animation:scSteam var(--t) ease-out var(--d) infinite}
+@keyframes scSteam{0%{opacity:0;transform:translate3d(0,0,0) scale(.55)}22%{opacity:.34}100%{opacity:0;transform:translate3d(24px,-280px,0) scale(1.5)}}
+.sc-lglow{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 105%,#3fe0a04a,transparent 62%),radial-gradient(ellipse at 14% 18%,#55d0ff30,transparent 55%)}
+
+/* ═════ Office (PPT to PDF) ═════ */
+.sc--office{z-index:0}
+.sc-owall,.sc-oprops,.sc-oblind,.sc-odesk,.sc-oglow{inset:-30px -50px}
+.sc-oblind,.sc-oglow{mix-blend-mode:screen}
+.od-blinds{animation:odBlinds 14s ease-in-out infinite alternate}
+@keyframes odBlinds{from{transform:translate3d(0,-8px,0)}to{transform:translate3d(0,10px,0)}}
+.od-flick{animation:odFlick 6.5s linear infinite}
+@keyframes odFlick{0%,100%{opacity:1}41%{opacity:1}43%{opacity:.9}46%{opacity:.82}49%{opacity:.95}}
+
+/* ═════ Under 768px: simplified (fewer layers, less ambient motion) ═════ */
+@media(max-width:767.98px){
+ .sc [data-full]{display:none!important}
+ .sc{--sx0:60%;--sw:clamp(70px,22vw,110px)}
+ .sc-l{transition:none}
+ .od-blinds,.od-flick,.sc-tw{animation:none}
+}
+@media(prefers-reduced-motion:reduce){
+ .sc *,.sc *::before,.sc *::after{animation:none!important;transition:none!important}
+ .sc-dust,.sc-steam,.sc-shimmer{display:none}
+ .sc-tw{opacity:.8}
+}
+.footer .sc--night .sc-moon{right:auto;left:44%}

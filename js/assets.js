@@ -1,6 +1,8 @@
 /* assets.js — SINGLE manifest of /assets paths + themed SVG/CSS placeholders.
    To swap a placeholder for a real file: drop it in /assets and set present:true. No other code changes. */
 import {officeDecor} from './office-decor.js';
+import {sunsetScene,nightScene,labScene} from './scenes.js';
+import * as ART from './props-art.js';
 const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;   // SMIL ignores CSS, so skip the heat-haze <animate> entirely
 const BASE=new URL('../assets/',import.meta.url).href;
 const f=(file,present=true,x={})=>({src:BASE+file,present,...x});
@@ -24,8 +26,6 @@ props:{hat:f('prop-pork-pie-hat.png'),pollos:f('prop-los-pollos.png'),bear:f('pr
  glasses:f('prop-glasses.png',false),rv:f('prop-rv.png',true),hazmatSuit:f('prop-hazmat-suit.png',false),gasMask:f('prop-gas-mask.png',false),
  barrel:f('prop-barrel.png',false),blueCrystals:f('prop-blue-crystals.png',false),flask:f('prop-flask.png',false),cashPile:f('prop-cash-pile.png',false),
  pizzaRoof:f('prop-pizza-roof.png',true),cactus:f('prop-cactus.png',false),tumbleweed:f('prop-tumbleweed.png',false)},
-audio:{click:f('sfx-click.mp3',false),drop:f('sfx-drop.mp3',false),bubbling:f('sfx-bubbling.mp3',false),success:f('sfx-success.mp3',false),
- error:f('sfx-error.mp3',false),knock:f('sfx-knock.mp3',false),theme:f('music-theme-loop.mp3',false)},
 video:{desert:f('bg-loop-desert.mp4',false)}};
 /** Silent fallback for any asset <img> that fails to load (file missing): the navbar logo becomes a plain text wordmark,
  *  every other image is removed so no broken-image icon or alt text shows. Blob/data images (user files, previews) are left alone. */
@@ -38,7 +38,6 @@ function installImgFallback(){
  const sweep=()=>document.querySelectorAll('img').forEach(i=>{if(i.complete&&i.naturalWidth===0&&i.getAttribute('src'))fix(i);});
  addEventListener('load',sweep);setTimeout(sweep,1500);}
 if(typeof document!=='undefined')installImgFallback();
-export const hasAudio=()=>Object.values(ASSETS.audio).some(a=>a.present);
 /** Publishes texture URLs as CSS variables so stylesheets never hard-code asset paths. */
 export function installCssVars(){const s=document.documentElement.style;
  for(const k in ASSETS.tex)s.setProperty('--tex-'+k,`url("${ASSETS.tex[k].src}")`);}
@@ -47,21 +46,22 @@ const esc=s=>String(s).replace(/"/g,'&quot;');
 export function char(key,alt='',cls='',eager=false){const a=ASSETS.char[key];
  return `<div class="char ${cls}" style="--iw:${a.iw};--ih:${a.ih};--x:${a.x};--y:${a.y};--w:${a.w};--h:${a.h};--src:url(&quot;${a.src}&quot;)"><img src="${a.src}" alt="${esc(alt)}" decoding="async"${eager?' fetchpriority="high"':' loading="lazy"'}${alt?'':' aria-hidden="true"'}></div>`;}
 export function prop(key,cls='',alt='',eager=false){const a=ASSETS.props[key];
- return a.present?`<img class="${cls}" src="${a.src}" alt="${esc(alt)}" ${eager?'':'loading="lazy" '}decoding="async">`:`<span class="${cls}" ${alt?`role="img" aria-label="${esc(alt)}"`:'aria-hidden="true"'}>${PROPS[key]}</span>`;}
+ return a.present?`<img class="${cls}" src="${a.src}" alt="${esc(alt)}" ${eager?'':'loading="lazy" '}decoding="async">`:`<span class="${cls}" ${alt?`role="img" aria-label="${esc(alt)}"`:'aria-hidden="true"'}>${typeof PROPS[key]==='function'?PROPS[key]('pa'+(pid++)):PROPS[key]}</span>`;}
+let pid=0;   // unique id prefix per drawn prop, so gradients/clips never collide
 /* ---------- prop placeholders (inline SVG, 100x100) ---------- */
 const S=(b)=>`<svg viewBox="0 0 100 100" width="100%" fill="none">${b}</svg>`;
 const PROPS={
-glasses:S('<g stroke="#0A0C0A" stroke-width="5"><circle cx="30" cy="52" r="18" fill="#55d0ff44"/><circle cx="70" cy="52" r="18" fill="#55d0ff44"/><path d="M48 50h4M12 48L4 40M88 48l8-8"/></g>'),
+glasses:ART.glasses,
 rv:S('<rect x="6" y="28" width="82" height="44" rx="9" fill="#e9e4d2" stroke="#0A0C0A" stroke-width="3"/><path d="M6 56h82" stroke="#1E7A3C" stroke-width="6"/><rect x="62" y="34" width="20" height="14" fill="#55d0ff"/><rect x="16" y="34" width="28" height="12" fill="#55d0ff"/><circle cx="28" cy="76" r="9" fill="#111" stroke="#888" stroke-width="3"/><circle cx="68" cy="76" r="9" fill="#111" stroke="#888" stroke-width="3"/>'),
-hazmatSuit:S('<path d="M34 10h32l8 20 14 16-8 8-8-8v44H28V46l-8 8-8-8 14-16z" fill="#F5C400" stroke="#0A0C0A" stroke-width="3"/><circle cx="50" cy="24" r="10" fill="#0A0C0A"/>'),
-gasMask:S('<path d="M22 20q28-14 56 0v34q0 22-28 34-28-12-28-34z" fill="#222" stroke="#F5C400" stroke-width="3"/><circle cx="36" cy="44" r="9" fill="#55d0ff"/><circle cx="64" cy="44" r="9" fill="#55d0ff"/><circle cx="50" cy="74" r="9" fill="#444" stroke="#F5C400" stroke-width="3"/>'),
-barrel:S('<path d="M20 12h60l4 76H16z" fill="#1E7A3C" stroke="#0F4A22" stroke-width="3"/><path d="M18 34h64M17 66h66" stroke="#0F4A22" stroke-width="5"/><path d="M42 44l8 14 8-14z" fill="#F5C400"/>'),
-blueCrystals:S('<path d="M10 90L24 40l12 50zM30 90l20-76 18 76zM62 90l16-44 14 44z" fill="#55D0FF" stroke="#e9fbff" stroke-width="2"/><path d="M50 14l-8 40 8 36z" fill="#bff0ff" opacity=".7"/>'),
-flask:S('<path d="M40 8h20v28l26 50q4 8-6 8H20q-10 0-6-8l26-50z" fill="#ffffff18" stroke="#e9fbff" stroke-width="3"/><path d="M26 66h48l12 22H14z" fill="#55D0FF"/><circle cx="46" cy="76" r="3" fill="#fff"/><circle cx="58" cy="70" r="2" fill="#fff"/>'),
-cashPile:S('<g fill="#6aa85f" stroke="#1d3d1a" stroke-width="2.5"><rect x="8" y="58" width="60" height="26" rx="2"/><rect x="26" y="44" width="60" height="26" rx="2" transform="rotate(-6 56 57)"/><rect x="14" y="32" width="60" height="26" rx="2" transform="rotate(5 44 45)"/></g><circle cx="44" cy="45" r="7" fill="#c9e8b4"/>'),
+hazmatSuit:ART.hazmatSuit,
+gasMask:ART.gasMask,
+barrel:ART.barrel,
+blueCrystals:ART.blueCrystals,
+flask:ART.flask,
+cashPile:ART.cashPile,
 pizzaRoof:S('<path d="M8 30q42-30 84 0L50 92z" fill="#F5C400" stroke="#A63220" stroke-width="4"/><circle cx="42" cy="42" r="6" fill="#A63220"/><circle cx="60" cy="50" r="6" fill="#A63220"/><circle cx="50" cy="68" r="5" fill="#A63220"/>'),
-cactus:S('<g fill="#1a2a12"><rect x="40" y="10" width="20" height="82" rx="10"/><path d="M40 56H26V32a7 7 0 0 1 14 0zM60 66h14V40a7 7 0 0 0-14 0z"/></g>'),
-tumbleweed:S('<g stroke="currentColor" stroke-width="3" fill="none"><circle cx="50" cy="50" r="38"/><path d="M14 40q36 24 72 0M16 64q34-30 68-4M30 18q40 30 36 66M68 16Q30 48 40 86M50 12v76"/></g>')};
+cactus:ART.cactus,
+tumbleweed:ART.tumbleweed};
 /* ---------- background scenes (CSS/SVG), same keys as ASSETS.bg ---------- */
 let uid=0;
 const SAG='<g id="@sg"><rect x="-13" y="-230" width="26" height="230" rx="13"/><path d="M-13-100h-34v-70a12 12 0 0 1 24 0v46h10zM13-130h34v-60a12 12 0 0 0-24 0v36h-10z"/></g>';
@@ -90,9 +90,11 @@ function room(k,id){const [a,b,g]=ROOM[k];let ex='';
  return `<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient><radialGradient id="${id}g" cx=".5" cy=".4"><stop offset="0" stop-color="${g}" stop-opacity=".45"/><stop offset="1" stop-color="${g}" stop-opacity="0"/></radialGradient></defs><rect width="1920" height="1080" fill="url(#${id}s)"/><rect width="1920" height="1080" fill="url(#${id}g)"/>${ex}</svg>`;}
 /** Custom CSS/SVG placeholders per ASSETS.bg key (richer than the generic room()). Used only while the real file is absent. */
 const PLACEHOLDERS={office:officeDecor};
+/** Layered, parallax-ready scenes (js/scenes.js). Same keys as ASSETS.bg; used only while the real JPG is absent. */
+const LAYERED={sunset:sunsetScene,night:nightScene,lab:labScene};
 /** Placeholder markup for a bg key. */
 function placeholder(key,id){if(key==='pilot')key='rv';   // pilot photo falls back to the drawn RV desert
- return PLACEHOLDERS[key]?`<div class="office-decor" aria-hidden="true">${PLACEHOLDERS[key]()}</div>`:(DESERT[key]?desert(key,id):(ROOM[key]?room(key,id):''));}
+ return LAYERED[key]?LAYERED[key]():PLACEHOLDERS[key]?`<div class="office-decor" aria-hidden="true">${PLACEHOLDERS[key]()}</div>`:(DESERT[key]?desert(key,id):(ROOM[key]?room(key,id):''));}
 /** Scene for an ASSETS.bg key. Placeholder is always painted first; when the manifest says the real file is present it is laid on top
  *  (and silently removed if it fails to load), so dropping bg-*.jpg into /assets and setting present:true is the only step. Includes grain + vignette. */
 export function scene(key){const a=ASSETS.bg[key],id='sc'+(uid++);
