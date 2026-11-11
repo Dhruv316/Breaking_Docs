@@ -119,26 +119,18 @@ body.is-reordering,body.is-reordering *{user-select:none;-webkit-user-select:non
 .rvp-cacti{position:absolute;left:0;right:0;bottom:36%;height:70px}.rvp-cacti span{position:absolute;bottom:-4px;width:38px;color:#1a2a12}
 .rvp-cacti span:nth-child(1){left:14%}.rvp-cacti span:nth-child(2){left:47%;width:30px}.rvp-cacti span:nth-child(3){left:76%;width:44px}
 .rvp-lane{position:absolute;left:0;right:0;bottom:0;height:36%;background:#1d1f21;box-shadow:inset 0 5px 0 #3a3d40}
-.rvp-dash{position:absolute;left:-60px;right:0;top:50%;height:6px;margin-top:-3px;will-change:transform;background:repeating-linear-gradient(90deg,var(--hazmat) 0 30px,transparent 30px 60px);animation:dashgo .5s linear infinite;animation-play-state:paused}
+.rvp-dash{position:absolute;left:0;right:0;top:50%;height:6px;margin-top:-3px;background:repeating-linear-gradient(90deg,var(--hazmat) 0 30px,transparent 30px 60px);animation:dashgo .5s linear infinite;animation-play-state:paused}
 .is-running .rvp-dash{animation-play-state:running}
-@keyframes dashgo{to{transform:translateX(-60px)}}
+@keyframes dashgo{to{background-position:-60px 0}}
 .rvp{--rv-w:clamp(124px,30vw,200px)}
 .rvp-rv{position:absolute;bottom:-4px;width:var(--rv-w);transition:left .3s linear;z-index:2}
-.rvp-body{display:block}.rvp-body img{width:100%;height:auto}
-.rvp-body{display:block;position:relative;transform-origin:50% 92%}.is-running .rvp-body{animation:bump .42s ease-in-out infinite}
-@keyframes bump{0%,100%{transform:translateY(0) rotate(-.6deg)}35%{transform:translateY(-3px) rotate(.7deg)}70%{transform:translateY(-1px) rotate(-.2deg)}}
-/* headlights: warm cone off the front lamps (RV faces right; lamps sit ~66% across, ~56% down the cutout) */
-.rvp-hl{position:absolute;left:64%;top:49%;width:62%;height:26%;pointer-events:none;opacity:.4;transform-origin:0 50%;
- background:radial-gradient(ellipse 12% 22% at 4% 50%,#fffbe0,#ffe68a99 55%,transparent),linear-gradient(90deg,#ffe98aaa,#ffe98a00 92%);clip-path:polygon(0 38%,100% 0,100% 100%,0 62%);filter:blur(1.5px)}
-.is-running .rvp-hl{animation:hlglow .9s ease-in-out infinite}
-@keyframes hlglow{0%,100%{opacity:.6}50%{opacity:1}}
-.rvp-dust{position:absolute;right:88%;bottom:8px;width:0;height:0;pointer-events:none}
-.rvp .rvp-dust::before,.rvp .rvp-dust::after{content:none}
-.rvp-puff{position:absolute;right:0;bottom:0;width:34px;height:34px;border-radius:50%;opacity:0;
- background:radial-gradient(circle at 30% 35%,#e6d3a6 0 30%,transparent 32%),radial-gradient(circle at 68% 62%,#cdb27c 0 34%,transparent 36%),radial-gradient(circle at 50% 50%,#d9c391cc,#d9c39100 70%)}
-.is-running .rvp-puff{animation:rvpuff .8s ease-out infinite}.is-running .rvp-puff+.rvp-puff{animation-delay:.4s;width:26px;height:26px}
-@keyframes rvpuff{0%{transform:translate(0,0) scale(.4) rotate(0);opacity:.85}100%{transform:translate(-64px,-16px) scale(1.5) rotate(360deg);opacity:0}}
-@media(prefers-reduced-motion:reduce){.rvp-dash,.rvp-body,.rvp-hl,.rvp-puff{animation:none!important}.rvp-hl{opacity:.55}}
+.rvp-body{display:block}.rvp-body img{width:100%;height:auto;filter:url(#bd-grade) drop-shadow(0 5px 3px #000b);
+-webkit-mask-image:radial-gradient(ellipse 44% 56% at 50% 46%,#000 76%,transparent 100%);mask-image:radial-gradient(ellipse 44% 56% at 50% 46%,#000 76%,transparent 100%)}   /* prop-rv.png ships with a strip of desert ground: feather it so only the RV reads */
+.rvp-body{display:block}.is-running .rvp-body{animation:bump .42s ease-in-out infinite}
+@keyframes bump{50%{transform:translateY(-3px)}}
+.rvp-dust{position:absolute;right:88%;bottom:8px;width:70px;height:26px;opacity:0;background:radial-gradient(closest-side,#d6c08fdd,transparent)}
+.is-running .rvp-dust{opacity:1;animation:puff .7s ease-out infinite}
+@keyframes puff{from{transform:scale(.5);opacity:.9}to{transform:translateX(-24px) scale(1.5);opacity:0}}
 .rvp-flag{position:absolute;right:10px;bottom:34%;width:46px;z-index:1;filter:drop-shadow(0 0 12px #55d0ffaa)}
 .rvp-bot{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:var(--t-m) var(--f-mono);color:var(--dust)}
 .rvp-line{color:var(--hazmat)}.rvp-cancel{justify-self:start;padding:0 28px}
@@ -292,30 +284,18 @@ html.intro-on .hero .flip .tile,html.intro-on .hero-char{animation-play-state:pa
 .js .reveal>*{opacity:0;animation:none}
 .js .reveal.in>*{opacity:1;animation:rise .7s var(--ease) both;animation-delay:calc(var(--i)*.14s)}
 /* easter eggs */
-.knock{position:fixed;right:0;bottom:0;z-index:150;display:flex;align-items:flex-end;pointer-events:none;animation:knockin .6s var(--ease) both;will-change:transform}
+.knock{position:fixed;right:0;bottom:0;z-index:150;display:flex;align-items:flex-end;pointer-events:none;animation:knockin .6s var(--ease) both}
 .knock.out{animation:knockout .5s ease-in both}
 .knock-char{width:min(250px,50vw)}
 .knock-char .char{width:100%}
 .knock-line{position:absolute;right:calc(min(250px,50vw) - 28px);bottom:62%;width:max-content;max-width:min(320px,62vw);background:var(--bone);color:var(--heisenberg);font:var(--t-xl)/1.1 var(--f-display);padding:12px 18px;border:3px solid #000;box-shadow:0 5px 0 #000;transform:rotate(-2deg)}
 @keyframes knockin{from{transform:translateX(110%)}}
 @keyframes knockout{to{transform:translateX(110%)}}
-/* screen-edge flash (opacity only) */
-body.knocking::before{content:"";position:fixed;inset:0;z-index:149;pointer-events:none;background:radial-gradient(ellipse at center,#0000 52%,#f5c400dd 100%);animation:knockflash .9s linear both}
-@keyframes knockflash{0%{opacity:0}12%,42%,72%{opacity:1}30%,60%{opacity:.15}100%{opacity:0}}
-/* soft vignette closing in (transform + opacity only) */
-.knock-vig{position:fixed;inset:-30%;z-index:148;pointer-events:none;background:radial-gradient(ellipse at 78% 80%,#0000 22%,#000000b8 62%);animation:vigin 2.5s ease-in-out both;will-change:transform,opacity}
-@keyframes vigin{0%{opacity:0;transform:scale(1.5)}35%{opacity:1;transform:scale(1)}78%{opacity:1;transform:scale(.92)}100%{opacity:0;transform:scale(.92)}}
-.pizza{position:fixed;top:2px;left:calc(50% - clamp(75px,10vw,100px));width:clamp(150px,20vw,200px);z-index:150;pointer-events:none;filter:url(#bd-grade) drop-shadow(0 6px 4px #0009);transform-origin:50% 100%;animation:pizzadrop 3s linear both;transition:opacity .5s;will-change:transform}
+body.knocking::before{content:"";position:fixed;inset:0;z-index:149;pointer-events:none;animation:knockflash .9s linear}
+@keyframes knockflash{0%,30%,60%,100%{box-shadow:inset 0 0 0 #0000}12%,42%,72%{box-shadow:inset 0 0 130px 24px #f5c400bb}}
+.pizza{position:fixed;top:2px;left:calc(50% - clamp(75px,10vw,100px));width:clamp(150px,20vw,200px);z-index:150;pointer-events:none;filter:url(#bd-grade) drop-shadow(0 6px 4px #0009);animation:pizzadrop 2.6s linear both;transition:opacity .5s}
 .pizza.out{opacity:0}
-/* tumble in with spin, land + squash, settle, slide along the bar, drop off the edge */
-@keyframes pizzadrop{
-0%{transform:translateY(-260px) rotate(-200deg) scale(1);animation-timing-function:cubic-bezier(.5,0,.9,.6)}
-24%{transform:translateY(0) rotate(-6deg) scale(1.18,.7);animation-timing-function:ease-out}
-32%{transform:translateY(-34px) rotate(4deg) scale(.96,1.06);animation-timing-function:ease-in}
-40%{transform:translateY(0) rotate(0) scale(1.08,.9);animation-timing-function:ease-out}
-46%{transform:translateY(0) rotate(0) scale(1);animation-timing-function:ease-in}
-72%{transform:translateX(30vw) translateY(0) rotate(14deg);animation-timing-function:ease-in}
-100%{transform:translateX(44vw) translateY(70vh) rotate(110deg)}}
+@keyframes pizzadrop{0%{transform:translateY(-220px) rotate(-140deg)}22%{transform:translateY(0) rotate(0);animation-timing-function:ease-out}30%{transform:translateY(-30px) rotate(5deg);animation-timing-function:ease-in}38%{transform:translateY(0) rotate(0)}60%{transform:translateY(0) rotate(0);animation-timing-function:ease-in}100%{transform:translateX(70vw) translateY(4px) rotate(38deg)}}
 @media(prefers-reduced-motion:reduce){.js .reveal>*{opacity:1}.intro,html.intro-on body::before{display:none!important}}
 /* text wordmark shown only if logo-breaking-docs.png is missing */
 .logo-fallback{font:var(--t-xl)/1 var(--f-display);color:var(--hazmat);letter-spacing:.02em;text-transform:uppercase;text-shadow:2px 2px 0 #000}
@@ -363,20 +343,3 @@ html.sc-hidden .pa-sp,html.sc-hidden .pa-bub{animation-play-state:paused}
 .snd-v[aria-pressed="true"]{background:var(--hazmat);border-color:var(--hazmat);color:var(--heisenberg)}
 @media(max-width:700px){.snd-t{display:none}.topbar .wrap{gap:10px}.snd-more{min-width:48px}}
 .snd-i,.snd-more svg{flex:none}
-
-/* ════════ Home cast banner ════════ */
-.cast-banner{position:relative;overflow:hidden;isolation:isolate;background:#2a1805;min-height:clamp(380px,46vw,560px);display:flex;flex-direction:column}
-.cast-banner .tape{position:relative;z-index:3;flex:none}
-.cast-bg{position:absolute;inset:0 -12%;z-index:0;background:url("../assets/bg-cast-clouds.jpg") center/cover;filter:sepia(.85) saturate(1.2) contrast(1.05) brightness(.8);animation:castdrift 60s ease-in-out infinite alternate;will-change:transform}
-@keyframes castdrift{from{transform:translateX(-6%)}to{transform:translateX(6%)}}
-.cast-banner::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;background:linear-gradient(90deg,#1a0e03f2 0%,#1a0e03cc 38%,#1a0e0344 70%,#1a0e0366 100%)}
-.cast-inner{position:relative;z-index:2;flex:1;display:flex;align-items:flex-end;justify-content:center}
-.cast-banner-h{position:absolute;left:max(20px,calc((100% - 1180px)/2));top:50%;transform:translateY(-50%);z-index:3;margin:0;max-width:5.2em;font:clamp(56px,9vw,128px)/.92 Anton,var(--f-display),Impact,sans-serif;text-transform:uppercase;color:#F2EBD8;text-shadow:0 3px 0 #000,0 0 28px #000c}
-.cast-trio{width:min(760px,100%);position:relative;z-index:2}
-.cast-trio .char{width:100%}
-@media(max-width:760px){
- .cast-inner{flex-direction:column;align-items:center;justify-content:flex-start;padding-top:28px}
- .cast-banner-h{position:static;transform:none;max-width:none;text-align:center;padding:0 20px;font-size:clamp(48px,13vw,80px)}
- .cast-trio{margin-top:auto;width:min(680px,100%)}
- .cast-banner::before{background:linear-gradient(180deg,#1a0e03f0 0%,#1a0e03a0 45%,#1a0e0355 100%)}}
-@media(prefers-reduced-motion:reduce){.cast-bg{animation:none!important}.knock-vig{animation-duration:.01s!important;opacity:0}}

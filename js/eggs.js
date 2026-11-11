@@ -11,12 +11,12 @@ const KONAMI='ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft
 export function konami(){if($('.knock'))return;play('knock');
  const k=document.createElement('div');k.className='knock';k.setAttribute('role','status');
  k.innerHTML=`<div class="knock-char" aria-hidden="true">${char('greenShirtGun','','',true)}</div><p class="knock-line">${COPY.eggs.konami}</p>`;
- const v=document.createElement('div');v.className='knock-vig';v.setAttribute('aria-hidden','true');document.body.append(v);document.body.append(k);document.body.classList.add('knocking');setTimeout(()=>v.remove(),2600);
+ document.body.append(k);document.body.classList.add('knocking');
  setTimeout(()=>document.body.classList.remove('knocking'),900);
- setTimeout(()=>k.classList.add('out'),2500);setTimeout(()=>k.remove(),3000);}
+ setTimeout(()=>k.classList.add('out'),reducedMotion?2800:3000);setTimeout(()=>k.remove(),reducedMotion?3000:3500);}
 /** Pizza lands on the roof (the navbar), bounces once, stays a moment. */
 export function pizza(){play('thump');toast(COPY.eggs.logo);const d=document.createElement('div');d.className='pizza';d.setAttribute('aria-hidden','true');d.innerHTML=prop('pizzaRoof');document.body.append(d);
- setTimeout(()=>d.classList.add('out'),reducedMotion?2200:2700);setTimeout(()=>d.remove(),reducedMotion?2800:3200);}
+ setTimeout(()=>d.classList.add('out'),2200);setTimeout(()=>d.remove(),2800);}
 /** Wires both eggs. Logo egg is home-only (on other pages a logo click navigates). */
 export function initEggs(){let n=0,tm,k=0;
  const cta=$('#hero a.btn[href="#tools"]');   // "Start cooking": the click is the gesture; default anchor scroll is untouched
