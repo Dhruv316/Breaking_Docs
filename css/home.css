@@ -1,0 +1,56 @@
+/* home.css — Home-only: tool grid icons, How it works, FAQ, promise icons */
+.how,.faq{position:relative;padding:var(--sp-5) 0;background:#05080a;isolation:isolate;overflow:hidden}
+.how h2,.faq h2{font-size:var(--t-3xl);margin-bottom:12px;color:var(--bone);text-shadow:0 4px 0 var(--tile-green-dark)}
+/* icon plate: art lives in its own light box, never under text */
+.ico{display:grid;place-items:center;background:var(--bone);border:3px solid var(--tile-green-dark);box-shadow:inset 0 -4px 0 #0002;flex:none}
+.ico svg{height:100%;width:auto;max-width:100%}
+/* 1 — tool grid: equal heights, 2 cols phone / 3 tablet+desktop */
+.grid--tools{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
+@media(min-width:640px){.grid--tools{grid-template-columns:repeat(3,minmax(0,1fr));gap:30px}}
+.tile--tool{aspect-ratio:auto;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:6px;min-height:224px;padding:36px 8px 14px;height:100%}
+.tile--tool .ico{position:relative;z-index:1;width:clamp(60px,40%,84px);aspect-ratio:1;padding:6px}
+.tile--tool .sym{position:static;inset:auto;display:block;padding:0;font-size:clamp(44px,7vw,68px);margin-top:auto}
+.tile--tool .name{position:static;margin-top:0;padding:0 4px;font-size:var(--t-m);line-height:1.2;min-height:2.4em;display:grid;place-items:center}
+.tile--tool .num,.tile--tool .mass{z-index:1}
+a.tile--tool:hover,a.tile--tool:focus-visible{border-color:var(--hazmat);box-shadow:inset 0 2px 0 #fff3,0 0 0 2px var(--hazmat),0 0 26px 4px #f5c40088,0 0 54px #1e7a3ccc,0 14px 0 #07290f,0 24px 30px #000a}
+.tile--tool .ico,.tile--tool .sym,.tile--tool .name{position:relative;z-index:1}
+/* 2 — How it works */
+.how-steps{list-style:none;margin:40px 0 0;padding:0;display:grid;grid-template-columns:1fr;gap:44px;position:relative}
+.how-steps::before{content:"";position:absolute;z-index:0;left:50%;top:0;bottom:0;width:16px;transform:translateX(-50%);background:repeating-linear-gradient(-45deg,var(--hazmat) 0 10px,var(--heisenberg) 10px 20px);box-shadow:0 0 0 2px #000}
+.step{aspect-ratio:auto;z-index:1;display:flex;flex-direction:column;align-items:center;text-align:center;gap:12px;padding:20px 18px 24px;min-height:0}
+.stepn{align-self:flex-start;display:grid;place-items:center;width:48px;height:48px;background:var(--heisenberg);border:3px solid var(--bone);color:var(--hazmat);font:28px/1 var(--f-display);box-shadow:0 4px 0 var(--tile-green-dark)}
+.ico--l{width:100%;max-width:220px;height:130px;padding:10px}
+.step h3{font-size:var(--t-2xl);color:#fff;text-shadow:0 3px 0 var(--tile-green-dark)}
+.step p{color:#fff;font-size:var(--t-m);max-width:30ch}
+.bub circle{fill:var(--blue-sky);stroke:var(--heisenberg);stroke-width:2.5;animation:bubup 2.4s ease-in infinite}
+.bub circle:nth-child(2){animation-delay:.8s}.bub circle:nth-child(3){animation-delay:1.5s}
+@keyframes bubup{0%{transform:translateY(14px);opacity:0}30%{opacity:1}100%{transform:translateY(-6px);opacity:0}}
+@media(min-width:760px){
+ .how-steps{grid-template-columns:repeat(3,minmax(0,1fr));gap:56px}
+ .how-steps::before{left:0;right:0;top:50%;bottom:auto;width:auto;height:16px;transform:translateY(-50%)}}
+/* 3 — FAQ accordion */
+.faq-list{margin-top:36px;display:grid;gap:14px;max-width:860px}
+.faq-i{background:#0a140c;border:3px solid var(--tile-green-dark);box-shadow:0 6px 0 #07290f}
+.faq-i h3{font:inherit}
+.faq-q{width:100%;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 18px;background:transparent;border:0;color:var(--bone);font:600 18px/1.3 var(--f-body);text-align:left}
+.faq-q:hover{background:#0f2a16}
+.faq-q[aria-expanded=true]{background:var(--tile-green);color:#fff}
+.faq-q:focus-visible{outline-offset:-3px}
+.faq-x{position:relative;flex:none;width:20px;height:20px}
+.faq-x::before,.faq-x::after{content:"";position:absolute;left:0;right:0;top:9px;height:3px;background:var(--hazmat);transition:transform .2s var(--ease)}
+.faq-x::after{transform:rotate(90deg)}
+.faq-q[aria-expanded=true] .faq-x::after{transform:rotate(0)}
+.faq-a{padding:16px 18px 20px;border-top:3px solid var(--tile-green-dark)}
+.faq-a p{color:var(--bone);font-size:var(--t-m);line-height:1.6;max-width:68ch}
+/* 4 — promise tiles */
+.promise .grid{align-items:stretch}
+.pt{height:100%;grid-template-columns:auto 1fr;min-height:128px}
+.pt-l{display:flex;align-items:center;gap:12px}
+.ico--s{width:56px;height:56px;padding:5px}
+.pt .sym{font-size:56px!important}
+@media(max-width:420px){.pt{grid-template-columns:1fr;gap:8px;padding-top:32px}.pt .name{font-size:var(--t-m)}.pt b{font-size:var(--t-xl)}}
+@media(max-width:640px){.how h2,.faq h2{font-size:var(--t-2xl)}}
+/* section dividers: tape = --tape-h; tile row = tile + --sp-3 padding both sides */
+.sep--tiles{display:flex;justify-content:center;gap:var(--sp-1);padding:var(--sp-3) 0;background:#05080a;overflow:hidden}
+.mini{display:grid;place-items:center;flex:none;width:52px;height:52px;background:linear-gradient(160deg,#208236,var(--tile-green) 45%,#145c2b);border:3px solid var(--bone);box-shadow:inset 0 2px 0 #fff3,0 4px 0 #07290f;color:var(--bone);font:24px/1 var(--f-display);text-shadow:0 2px 0 var(--tile-green-dark)}
+@media(max-width:480px){.mini:nth-child(n+6){display:none}}

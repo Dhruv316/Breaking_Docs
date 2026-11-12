@@ -1,0 +1,19 @@
+Layout report 2026-11-12T16:53:40.974Z  base=http://localhost:8000
+
+=== 404.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== compress-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== image-to-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== index.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== merge-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== ppt-to-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== remove-pages.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== split-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+TOTAL 0

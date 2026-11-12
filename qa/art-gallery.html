@@ -1,0 +1,21 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Art gallery (QA)</title>
+<link rel="stylesheet" href="../css/tokens.css"><link rel="stylesheet" href="../css/art.css">
+<style>
+body{margin:0;font:14px/1.3 system-ui,sans-serif;background:#222;color:#eee}
+.row{display:grid;grid-template-columns:110px 1fr 1fr;border-bottom:1px solid #444}
+.row>*{padding:10px;display:flex;align-items:flex-end;gap:18px;flex-wrap:wrap}
+.dk{background:var(--heisenberg)}.lt{background:var(--dust)}
+.row b{align-items:center;font-weight:600;color:#fff}.dk{color:var(--bone)}.lt{color:var(--heisenberg)}
+.tape{width:300px;height:30px}
+</style></head><body>
+<div id="g"></div>
+<script src="../js/art/sprites.js"></script>
+<script>
+var g=document.getElementById('g'),html='';
+Art.ids.forEach(function(id){var cell=function(c){return '<div class="'+c+'">'+[28,64,150].map(function(h){return Art.svg(id,h)}).join('')+'</div>'};
+ html+='<div class="row"><b>'+id+'</b>'+cell('dk')+cell('lt')+'</div>'});
+html+='<div class="row"><b>hazard-tape</b><div class="dk"><svg class="tape"><rect width="100%" height="100%" fill="url(#art-hazard-tape)"/></svg></div><div class="lt"><svg class="tape"><rect width="100%" height="100%" fill="url(#art-hazard-tape)"/></svg>'+
+ '<svg width="100" height="130" viewBox="0 0 100 130"><rect clip-path="url(#art-flask-clip)" y="70" width="100" height="60" fill="#55D0FF"/><use href="#art-flask" width="100" height="130"/></svg></div></div>';
+g.innerHTML=html;
+</script></body></html>

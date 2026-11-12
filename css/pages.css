@@ -16,7 +16,7 @@
 .hero .tape{position:absolute;left:0;right:0;bottom:0}
 .tumble{position:absolute;z-index:4;bottom:58px;left:-90px;width:70px;color:#3a1a0e;animation:roll 25s linear 9s infinite}
 @keyframes roll{0%{transform:translateX(0) rotate(0)}18%,100%{transform:translateX(calc(100vw + 200px)) rotate(1080deg)}}
-.tools,.promise{position:relative;padding:88px 0;background:#05080a;isolation:isolate;overflow:hidden}
+.tools,.promise{position:relative;padding:var(--sp-5) 0;background:#05080a;isolation:isolate;overflow:hidden}
 .tools .wrap,.promise .wrap{position:relative;z-index:4}
 .tools h2,.promise h2{font-size:var(--t-3xl);margin-bottom:12px;color:var(--bone);text-shadow:0 4px 0 var(--tile-green-dark)}
 .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:36px}

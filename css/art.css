@@ -1,0 +1,27 @@
+/* art.css — scene scaffolding for the hand-drawn art. Decorative only. Animations: transform/opacity. */
+.art-scene{position:relative;overflow:hidden;isolation:isolate}
+.art-layer,.art-grain,.art-vignette,.art-rays,.art-drift,[data-art-fg]{pointer-events:none;-webkit-user-select:none;user-select:none}
+.art-layer{position:absolute;inset:0;z-index:0;will-change:transform}
+.art-layer[data-depth]{transform:translate3d(var(--art-x,0px),var(--art-y,0px),0)}
+.art-layer>svg{display:block;position:absolute}
+.art-grain{position:absolute;inset:0;z-index:5;background:url(../assets/texture-grain.png) repeat;background-size:256px;opacity:.14;mix-blend-mode:overlay}
+.art-vignette{position:absolute;inset:0;z-index:6;background:radial-gradient(ellipse at 50% 45%,transparent 55%,rgba(10,12,10,.55) 100%)}
+/* light rays: oversized conic layer, slow rotation + opacity breathe */
+.art-rays{position:absolute;left:50%;top:50%;width:200%;aspect-ratio:1;margin:-100% 0 0 -100%;z-index:1;
+ background:repeating-conic-gradient(from 0deg,rgba(245,196,0,.16) 0 6deg,transparent 6deg 18deg);
+ -webkit-mask-image:radial-gradient(circle,#000 0,transparent 62%);mask-image:radial-gradient(circle,#000 0,transparent 62%);
+ animation:art-rays-spin 90s linear infinite,art-rays-breathe 7s ease-in-out infinite}
+@keyframes art-rays-spin{to{transform:rotate(360deg)}}
+@keyframes art-rays-breathe{0%,100%{opacity:.55}50%{opacity:1}}
+/* drift: dust motes. Two layers of dots (static box-shadows), moved by transform */
+.art-drift{position:absolute;inset:0;z-index:4;overflow:hidden}
+.art-drift::before,.art-drift::after{content:"";position:absolute;left:0;top:0;width:3px;height:3px;border-radius:50%;background:var(--dust,#D6C08F);opacity:.5;
+ box-shadow:8vw 12vh 0 var(--dust,#D6C08F),22vw 70vh 0 var(--dust,#D6C08F),37vw 30vh 0 var(--dust,#D6C08F),51vw 85vh 0 var(--dust,#D6C08F),64vw 18vh 0 var(--dust,#D6C08F),78vw 58vh 0 var(--dust,#D6C08F),91vw 40vh 0 var(--dust,#D6C08F),14vw 44vh 0 var(--dust,#D6C08F),70vw 92vh 0 var(--dust,#D6C08F);
+ animation:art-drift 28s linear infinite}
+.art-drift::after{width:2px;height:2px;opacity:.35;margin:-6vh 0 0 11vw;animation-duration:42s;animation-direction:reverse}
+@keyframes art-drift{0%{transform:translate3d(0,0,0)}50%{transform:translate3d(-6vw,-4vh,0)}100%{transform:translate3d(-12vw,0,0)}}
+.art-hazard-edge{height:var(--tape-h,22px);background:repeating-linear-gradient(45deg,var(--heisenberg,#0A0C0A) 0 14px,var(--hazmat,#F5C400) 14px 28px)}
+@media (prefers-reduced-motion:reduce){
+ .art-rays,.art-drift::before,.art-drift::after{animation:none!important}
+ .art-layer[data-depth]{transform:none!important}
+}

@@ -7,10 +7,11 @@
 <meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
-<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css">
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css"><link rel="stylesheet" href="css/art.css"><link rel="stylesheet" href="css/hero.css"><link rel="stylesheet" href="css/home.css">
 <script>(function(){try{var m=matchMedia('(prefers-reduced-motion: reduce)').matches,s=null;try{s=localStorage.getItem('bd.intro.v1')}catch(e){}
 document.documentElement.classList.add('js');if(!m&&!location.hash&&(!s||/[?&]intro\b/.test(location.search)))document.documentElement.classList.add('intro-on')}catch(e){}
 setTimeout(function(){document.documentElement.classList.remove('intro-on')},8000)})()</script>
+<script src="js/art/sprites.js" defer></script><script src="js/art/parallax.js" defer></script>
 <script type="module" src="js/ui.js"></script></head>
 <body>
 <div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-t">
@@ -22,28 +23,48 @@ setTimeout(function(){document.documentElement.classList.remove('intro-on')},800
 </div>
 <div id="topbar"></div>
 <main>
-<section class="hero" id="hero" data-scene="sunset">
- <div class="shade"></div>
- <div class="hero-char" data-char="heisenberg"></div>
- <div class="shimmer" aria-hidden="true"></div>
- <span class="tumble" data-prop="tumbleweed"></span>
- <div class="wrap hero-copy">
-  <div class="flip" aria-hidden="true">
-   <div class="tile" style="--i:0"><span class="num mono">35</span><span class="sym">Br</span></div>
-   <div class="tile" style="--i:1"><span class="num mono">66</span><span class="sym">Dc</span></div></div>
-  <h1 data-copy="home.heroHeadline" data-el="home.heroElements"></h1>
-  <p class="hero-sub" data-copy="home.heroSub"></p>
-  <a class="btn" href="#tools" data-copy="home.heroButton"></a>
+<section class="hero hero2" id="hero">
+ <div class="hero-grid">
+  <div class="hero-copy">
+   <div class="flip" aria-hidden="true">
+    <div class="tile" style="--i:0"><span class="num mono">35</span><span class="sym">Br</span></div>
+    <div class="tile" style="--i:1"><span class="num mono">66</span><span class="sym">Dc</span></div></div>
+   <h1 data-copy="home.heroHeadline" data-el="home.heroElements"></h1>
+   <p class="hero-sub" data-copy="home.heroSub"></p>
+   <a class="btn" href="#tools" data-copy="home.heroButton"></a>
+  </div>
+  <div class="art-scene hero-art">
+   <div class="art-layer ha-sky" data-art-bg data-depth="0.1" aria-hidden="true"></div>
+   <div class="art-layer ha-stars" data-art-bg data-depth="0.15" aria-hidden="true"><i style="left:8%;top:5%;--d:0s"></i><i style="left:22%;top:9%;--d:1.3s"></i><i style="left:37%;top:3%;--d:2.1s"></i><i style="left:63%;top:6%;--d:0.7s"></i><i style="left:78%;top:3%;--d:1.8s"></i><i style="left:91%;top:9%;--d:2.6s"></i></div>
+   <div class="art-layer" data-art-bg data-depth="0.3" aria-hidden="true"><div class="art-rays ha-rays"></div><div class="ha-sun"></div></div>
+   <div class="art-layer ha-mesa ha-far" data-art-bg data-depth="0.25" aria-hidden="true"><svg class="" viewBox="0 0 300 110" focusable="false"><use href="#art-mesa-set" width="300" height="110"/></svg></div>
+   <div class="art-layer ha-mesa ha-mid" data-art-bg data-depth="0.45" aria-hidden="true"><svg class="" viewBox="0 0 300 110" focusable="false"><use href="#art-mesa-set" width="300" height="110"/></svg></div>
+   <div class="art-layer" data-art-bg data-depth="0.6" aria-hidden="true"><svg class="ha-bust" viewBox="0 0 120 140" focusable="false"><use href="#art-hat-bust" width="120" height="140"/></svg></div>
+   <div class="art-layer ha-mesa ha-near" data-art-bg data-depth="0.8" aria-hidden="true"><svg class="" viewBox="0 0 300 110" focusable="false"><use href="#art-mesa-set" width="300" height="110"/></svg><div class="ha-shimmer"></div></div>
+   <div class="art-layer ha-ground" data-art-bg data-depth="0.9" aria-hidden="true"><div class="ha-road"></div></div>
+   <div class="art-layer ha-lane" data-art-fg data-depth="1.2" aria-hidden="true">
+    <svg class="ha-sag ha-sag1" viewBox="0 0 80 140" focusable="false"><use href="#art-saguaro" width="80" height="140"/></svg><svg class="ha-sag ha-sag2" viewBox="0 0 80 140" focusable="false"><use href="#art-saguaro" width="80" height="140"/></svg><svg class="ha-sag ha-sag3" viewBox="0 0 80 140" focusable="false"><use href="#art-saguaro" width="80" height="140"/></svg>
+    <svg class="ha-rock " style="left:27%;bottom:2%;width:calc(var(--m)*0.15)" viewBox="0 0 60 36" focusable="false"><path d="M2 35L9 15L25 6L43 11L58 35Z" fill="#0A0C0A" stroke="var(--bone)" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 6L43 11L58 35H38Z" fill="var(--sunset-red)" fill-opacity=".5"/><path d="M9 15L25 6" stroke="var(--hazmat)" stroke-width="2.5" stroke-linecap="round"/></svg><svg class="ha-rock " style="left:66%;bottom:1%;width:calc(var(--m)*0.11)" viewBox="0 0 60 36" focusable="false"><path d="M2 35L9 15L25 6L43 11L58 35Z" fill="#0A0C0A" stroke="var(--bone)" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 6L43 11L58 35H38Z" fill="var(--sunset-red)" fill-opacity=".5"/><path d="M9 15L25 6" stroke="var(--hazmat)" stroke-width="2.5" stroke-linecap="round"/></svg><svg class="ha-rock " style="left:46%;bottom:0;width:calc(var(--m)*0.07)" viewBox="0 0 60 36" focusable="false"><path d="M2 35L9 15L25 6L43 11L58 35Z" fill="#0A0C0A" stroke="var(--bone)" stroke-width="2.5" stroke-linejoin="round"/><path d="M25 6L43 11L58 35H38Z" fill="var(--sunset-red)" fill-opacity=".5"/><path d="M9 15L25 6" stroke="var(--hazmat)" stroke-width="2.5" stroke-linecap="round"/></svg>
+    <div class="ha-tw"><svg class="" viewBox="0 0 100 100" focusable="false"><use href="#art-tumbleweed" width="100" height="100"/></svg></div>
+    <div class="ha-rv"><i class="p p1"></i><i class="p p2"></i><i class="p p3"></i><i class="p p4"></i><div class="ha-rv-body"><svg class="" viewBox="0 0 240 120" focusable="false"><use href="#art-rv" width="240" height="120"/></svg></div></div>
+   </div>
+   <div class="art-drift" aria-hidden="true"></div>
+   <div class="art-grain" aria-hidden="true"></div>
+   <div class="art-vignette" aria-hidden="true"></div>
+  </div>
  </div>
  <div class="tape"></div>
 </section>
 <section class="tools" id="tools" data-scene="night"><div class="wrap">
  <h2 data-copy="home.gridHeading"></h2>
- <div class="grid reveal" data-tiles='{"live":true}'></div>
+ <div class="grid grid--tools reveal" data-tiles='{"live":true,"icons":true}'></div>
  <div class="soon"><div class="hank" data-char="hank"></div>
   <div><h3 data-copy="home.soonNote"></h3><div class="grid" data-tiles='{"live":false,"soon":true}'></div></div></div>
 </div></section>
-<div class="tape"></div>
+<div class="sep sep--tiles" data-sep="tiles" aria-hidden="true"></div>
+<section class="how" id="how"><div class="wrap"><h2 data-copy="home.howHeading"></h2>
+ <ol class="how-steps" data-how data-copy-aria="home.howAria"></ol></div></section>
+<div class="tape sep" aria-hidden="true"></div>
 <section class="promise" id="about" data-scene="lab"><div class="wrap"><div class="grid" data-promise></div>
  <h2 class="cast-h" data-copy="about.heading"></h2>
  <ul class="cast" data-copy-aria="about.aria">
@@ -51,6 +72,9 @@ setTimeout(function(){document.documentElement.classList.remove('intro-on')},800
   <li class="cameo"><div class="cameo-img" data-char="walterJr"></div><p class="cameo-cap mono" data-copy="about.walterJr"></p></li>
   <li class="cameo cameo--wide"><div class="cameo-img" data-char="saulAlt"></div><p class="cameo-cap mono" data-copy="about.saul"></p></li>
  </ul></div></section>
+<div class="sep sep--tiles" data-sep="tiles" aria-hidden="true"></div>
+<section class="faq" id="faq"><div class="wrap"><h2 data-copy="home.faqHeading"></h2>
+ <div class="faq-list" data-faq data-copy-aria="home.faqAria" role="group"></div></div></section>
 </main>
 <footer id="footer"></footer>
 </body></html>

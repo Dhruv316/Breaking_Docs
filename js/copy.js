@@ -9,8 +9,17 @@ home:{title:'Breaking Docs — We cook documents.',
  heroHeadline:'We cook documents.',heroElements:['Co','Cu'],
  heroSub:'Images, slides, and bloated PDFs. Done in your browser. Pure and private.',heroButton:'Start cooking',
  gridHeading:'The product',soonNote:'Not yet.',
- promises:['Private — nothing is uploaded.','Free — no signup, no limits.','Pure — decent output, honest limits.'],promiseSyms:['Pr','Fr','Pu']},
-footer:{pollos:'Visit Los Pollos',tools:'Tools',about:'About'},
+ promises:['Private — nothing is uploaded.','Free — no signup, no limits.','Pure — decent output, honest limits.'],promiseSyms:['Pr','Fr','Pu'],
+ howHeading:'How it works',howAria:'Three steps',howStep:'Step {n}',
+ how:[{t:'Drop',d:'Toss your file in the barrel. It stays on your device.'},{t:'Cook',d:'Your browser does the chemistry. Keep the lid on.'},{t:'Collect',d:'Grab your pure PDF. Cooked, boxed, yours.'}],
+ faqHeading:'Straight answers',faqAria:'Frequently asked questions',
+ faq:[
+  {q:'Is it private?',a:'Yes. Your files are processed inside this browser tab and never uploaded to us. The page does fetch its PDF and slide libraries from public CDNs, but your files are not part of that.'},
+  {q:'Is it free?',a:'Yes. No signup, no account, no counter. The only limits are file size and what your browser can handle.'},
+  {q:'What are the file size limits?',a:'Images up to 25MB each, slides up to 50MB, PDFs up to 100MB. Huge files can still strain a phone, so a desktop browser copes better.'},
+  {q:'Why is text not selectable after Compress?',a:'Compress turns each page into an image to shrink it. Images have no text layer, so you can\'t select or search it. Need the text? Use Street grade, or keep the original.'},
+  {q:'Why can PPT fonts look different?',a:'We render your slides in the browser and swap fonts we don\'t have for similar ones. Line breaks and spacing can shift, so check the PDF before you send it.'}]},
+footer:{pollos:'Visit Los Pollos',tools:'Tools',about:'About',art:'Night desert with mesas and a saguaro, a hazmat figure standing watch'},
 alt:{skyler:'Skyler, arms crossed, checking the numbers',walterJr:'Walter Jr., smiling',saulAlt:'Saul in a pink shirt, pointing at you',heisenberg:'Heisenberg in his pork pie hat and glasses',gus:'Gus Fring, watching',greenShirt:'Walter in a green shirt, standing alone in the desert',hank:'Hank, arms folded, unimpressed',pollos:'Los Pollos Hermanos',jesse:'Jesse, leaning in',mike:'Mike, unimpressed',rv:'The RV, driving',walter:'Walter in a yellow hazmat suit, seated',saul:'Saul at his desk, pointing straight at you'},
 intro:{skip:'Skip intro',tag:'Break it down. Build it back.',aria:'Welcome to Breaking Docs'},
 about:{heading:'The family business',aria:'Cameos',skyler:'Keeps the books.',walterJr:'Approves of the breakfast.',saul:'Handles the paperwork.'},
@@ -80,10 +89,10 @@ notFound:{heading:'You\'re not supposed to be here.',sub:'This page doesn\'t exi
 imTypes:'JPG, PNG, WEBP, GIF, BMP, SVG, AVIF, HEIC, TIFF'};
 /** Tile registry. Adding a tool = one entry here + page + js/tools/<name>.js */
 export const TOOLS=[
-{n:1,sym:'Im',live:true,href:'image-to-pdf.html',mass:'25MB'},
-{n:2,sym:'Pp',live:true,href:'ppt-to-pdf.html',mass:'50MB'},
-{n:3,sym:'Cp',live:true,href:'compress-pdf.html',mass:'100MB'},
-{n:4,sym:'Mg',live:true,href:'merge-pdf.html',mass:'100MB'},{n:5,sym:'Sp',live:true,href:'split-pdf.html',mass:'100MB'},{n:6,sym:'Rm',live:true,href:'remove-pages.html',mass:'100MB'},
+{n:1,sym:'Im',icon:'image-frames',live:true,href:'image-to-pdf.html',mass:'25MB'},
+{n:2,sym:'Pp',icon:'stack-of-slides',live:true,href:'ppt-to-pdf.html',mass:'50MB'},
+{n:3,sym:'Cp',icon:'squeeze-press',live:true,href:'compress-pdf.html',mass:'100MB'},
+{n:4,sym:'Mg',icon:'merge-arrows',live:true,href:'merge-pdf.html',mass:'100MB'},{n:5,sym:'Sp',icon:'scissors',live:true,href:'split-pdf.html',mass:'100MB'},{n:6,sym:'Rm',icon:'eraser',live:true,href:'remove-pages.html',mass:'100MB'},
 {n:7,sym:'Wm',name:'Watermark'},{n:8,sym:'Pn',name:'Page numbers'},{n:9,sym:'Ul',name:'Unlock PDF'}];
 /** @param {string} path dot path into COPY */
 export const t=p=>p.split('.').reduce((o,k)=>o?.[k],COPY)??'';
