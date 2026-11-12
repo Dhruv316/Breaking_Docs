@@ -5,9 +5,8 @@
 --bg:var(--heisenberg);--fg:var(--dust);--head:var(--bone);--panel:#0f160f;
 --f-display:'Anton','Impact','Arial Narrow',sans-serif;--f-body:'Barlow','Segoe UI',system-ui,sans-serif;--f-mono:'Share Tech Mono',ui-monospace,Menlo,Consolas,monospace;
 --t-s:14px;--t-m:16px;--t-l:20px;--t-xl:28px;--t-2xl:44px;--t-3xl:72px;--t-hero:clamp(64px,11vw,120px);
---sp-1:8px;--sp-2:16px;--sp-3:24px;--sp-4:48px;--sp-5:88px;--tape-h:22px;--ease:cubic-bezier(.2,.8,.2,1)}
+--tape-h:22px;--ease:cubic-bezier(.2,.8,.2,1)}
 /* "daylight desert" */
 @media(prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:var(--dust);--fg:#1c1710;--head:var(--heisenberg);--panel:var(--bone)}}
 :root[data-theme=light]{--bg:var(--dust);--fg:#1c1710;--head:var(--heisenberg);--panel:var(--bone)}
 :root[data-theme=dark]{--bg:var(--heisenberg);--fg:var(--dust);--head:var(--bone);--panel:#0f160f}
-@media(max-width:640px){:root{--sp-5:64px}}
