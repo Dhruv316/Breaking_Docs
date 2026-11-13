@@ -1,7 +1,7 @@
 /* ui.js — navbar, footer, tiles, copy binding, theme, title music, easter eggs, reduced motion */
 import {ASSETS,installCssVars,scene,char,prop} from './assets.js';
 import {initScenes} from './scenes.js';
-import {COPY,TOOLS,t} from './copy.js';
+import {COPY,TOOLS,t,BLURBS} from './copy.js';
 import {reducedMotion,toast} from './ui-kit.js';
 import {initIntro as initTheme} from './sound.js';
 import {initEggs} from './eggs.js';
@@ -9,6 +9,7 @@ import {initFx} from './fx.js';
 import {initMotion} from './motion.js';
 import {initIntro} from './intro.js';
 import {installGrade} from './grade.js';
+import {initDismiss} from './dismiss.js';
 export {reducedMotion,toast};
 const $=(s,r=document)=>r.querySelector(s);
 /** Wraps the first matching occurrence of each symbol in the text as an element tile ("Co"ok, do"Cu"ments). */
@@ -45,9 +46,19 @@ function bind(){document.querySelectorAll('[data-copy]').forEach(e=>{const v=t(e
  document.querySelectorAll('[data-promise]').forEach(e=>{e.innerHTML=COPY.home.promises.map((p,i)=>{const [a,b]=p.split(' — ');
   return `<div class="tile pt" style="--i:${i}"><span class="num mono">${i+1}</span><span class="sym">${COPY.home.promiseSyms[i]}</span><span class="name"><b>${a}</b>${b}</span></div>`}).join('');});
  if($('#hero'))document.title=COPY.home.title;}
+/* Art sprites on every page (additive). Home tiles get an icon badge, a one-line blurb and a mouse spotlight. */
+const ICONS={Im:'image-frames',Pp:'stack-of-slides',Cp:'squeeze-press',Mg:'merge-arrows',Sp:'scissors',Rm:'eraser'};
+function decorateTiles(){if(!window.Art)return;
+ document.querySelectorAll('#tools a.tile,[data-tiles] a.tile').forEach(a=>{if(a.querySelector('.ico'))return;const s=$('.sym',a)?.textContent;if(!ICONS[s])return;
+  a.insertAdjacentHTML('afterbegin',`<span class="spot" aria-hidden="true"></span><span class="ico" aria-hidden="true">${Art.svg(ICONS[s],44)}</span>`);
+  $('.name',a).insertAdjacentHTML('afterend',`<span class="desc">${BLURBS[s]}</span>`);});}
+function spotlight(){if(!matchMedia('(pointer: fine)').matches||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ document.addEventListener('pointermove',e=>{const a=e.target.closest?.('a.tile');if(!a)return;const r=a.getBoundingClientRect();
+  a.style.setProperty('--mx',(e.clientX-r.left)+'px');a.style.setProperty('--my',(e.clientY-r.top)+'px');});}
+function loadArt(){if(window.Art){decorateTiles();return;}const sc=document.createElement('script');sc.src='js/art/sprites.js';sc.onload=decorateTiles;document.head.appendChild(sc);}
 /** Boots every page: css vars, chrome, copy, motion, title music, eggs, intro. */
 export function init(){installCssVars();installGrade();navbar();if($('#footer'))footer();bind();initScenes();initFx();initMotion();initEggs();
  if(reducedMotion)document.querySelectorAll('svg').forEach(s=>s.pauseAnimations?.());
- initTheme(ASSETS.audio.intro.src);
+ initTheme(ASSETS.audio.intro.src);loadArt();spotlight();initDismiss();
  if($('#hero'))initIntro();}
 init();

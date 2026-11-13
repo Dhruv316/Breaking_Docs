@@ -59,7 +59,7 @@ html.sc-hidden *,html.sc-hidden *::before,html.sc-hidden *::after{animation-play
 /* ═══ 4. Micro-interactions ═══ */
 /* tiles: lift + glow (glow = pseudo-element opacity, see components.css) ; colours snap, only transform eases */
 .tile{transition:transform .2s var(--ease)}
-a.tile:hover,a.tile:focus-visible{transform:translateY(-8px) scale(1.015)}
+a.tile:hover,a.tile:focus-visible{transform:translateY(var(--lift)) scale(1.015)}
 a.tile:active{transform:translateY(2px) scale(.99)}
 /* buttons: physical press */
 .btn{transition:transform .12s var(--ease)}

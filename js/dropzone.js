@@ -34,6 +34,13 @@ export function createDropzone(o){
  const hasFiles=e=>[...(e.dataTransfer?.types||[])].includes('Files');
  const handle=list=>{const files=[...list];if(files.length&&!disabled)onFiles(validateFiles(files,{exts,mimes,maxBytes}));};
  const over=on=>{root.classList.toggle('is-over',on);if(label&&overText)label.textContent=on?overText:idleText;};
+ // journey stepper: mirror the tool's data-state into data-stage (idle|ready|working|done) + spotlight pointer
+ const tool=document.getElementById('tool');
+ if(tool){const map={idle:'idle',filesChosen:'ready',processing:'working',done:'done'};
+  const sync=()=>{const m=map[tool.dataset.state];if(m)tool.setAttribute('data-stage',m);};sync();
+  new MutationObserver(sync).observe(tool,{attributes:true,attributeFilter:['data-state']});}
+ if(matchMedia('(pointer: fine)').matches&&!matchMedia('(prefers-reduced-motion: reduce)').matches)
+  root.addEventListener('pointermove',e=>{const r=root.getBoundingClientRect();root.style.setProperty('--mx',(e.clientX-r.left)+'px');root.style.setProperty('--my',(e.clientY-r.top)+'px');});
  const L={
   dragenter:e=>{if(!hasFiles(e)||disabled)return;e.preventDefault();depth++;over(true);},
   dragover:e=>{if(!hasFiles(e)||disabled)return;e.preventDefault();e.dataTransfer.dropEffect='copy';},

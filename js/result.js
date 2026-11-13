@@ -1,6 +1,6 @@
 /* result.js — result screen: purity stamp, download, "Cook another batch", "Back to the lab". Owns the blob URL. */
 import {scene,char,prop} from './assets.js';
-import {COPY,t} from './copy.js';
+import {COPY,t,TOOLS} from './copy.js';
 import {fill,esc,formatBytes} from './format.js';
 import {reducedMotion} from './ui-kit.js';
 
@@ -17,6 +17,14 @@ function burst(host){
    h+=`<i style="--x:${cx.toFixed(1)}px;--y:${cy.toFixed(1)}px;--s:${(7+Math.random()*9).toFixed(1)}px;--dx:${(Math.cos(a)*d*1.25).toFixed(1)}px;--dy:${(Math.sin(a)*d*.8+28+Math.random()*34).toFixed(1)}px;--r:${Math.round(-220+Math.random()*440)}deg;--d:${(.43+Math.random()*.04).toFixed(3)}s"></i>`;}
   wrap.innerHTML=h;host.append(wrap);setTimeout(()=>wrap.remove(),1500);});
  ro.observe(stamp);setTimeout(()=>ro.disconnect(),30000);}
+
+const ICONS={Im:'image-frames',Pp:'stack-of-slides',Cp:'squeeze-press',Mg:'merge-arrows',Sp:'scissors',Rm:'eraser'};
+/** "Cook something else": first three live tools (fixed Tools order) that are not the current page. Icons come from the art sprite once it has loaded. */
+function moreTools(){const cur=location.pathname.split('/').pop()||'index.html';
+ const list=TOOLS.filter(x=>x.live&&x.href!==cur).slice(0,3);
+ return `<nav class="res-more" aria-label="${esc(t('result.moreAria'))}"><h3>${esc(t('result.more'))}</h3><ul class="cook-row">${list.map((x,i)=>`<li><a class="tile" style="--i:${i}" href="${x.href}"><span class="spot" aria-hidden="true"></span><span class="ico" aria-hidden="true"></span><span class="num mono">${x.n}</span><span class="sym">${x.sym}</span><span class="name">${esc(COPY.tools[x.sym].name)}</span></a></li>`).join('')}</ul></nav>`;}
+function moreIcons(host){let n=0;const go=()=>{if(window.Art){host.querySelectorAll('.res-more .tile').forEach(a=>{const s=a.querySelector('.sym')?.textContent,i=a.querySelector('.ico');if(i&&ICONS[s]&&!i.firstChild)i.innerHTML=window.Art.svg(ICONS[s],36);});return;}
+  if(++n<40)setTimeout(go,150);};go();}
 
 /**
  * Renders the result into `host`.
@@ -42,9 +50,11 @@ export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,not
     <button type="button" class="btn btn-danger btn-sm res-again">${t('result.again')}</button>
     <a class="btn btn-2 btn-sm" href="index.html">${t('result.back')}</a>
    </div>
+   ${moreTools()}
   </div>`;
+ document.getElementById('tool')?.setAttribute('data-stage','done');
  host.querySelector('.res-again').addEventListener('click',()=>onAgain&&onAgain());
  host.querySelector('.res-head').focus({preventScroll:true});
- burst(host);
+ burst(host);moreIcons(host);
  return {destroy(){URL.revokeObjectURL(url);partUrls.forEach(u=>URL.revokeObjectURL(u));host.replaceChildren();}};
 }

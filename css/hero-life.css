@@ -1,0 +1,37 @@
+/* hero-life.css — additive depth + life for the Home hero. transform/opacity/box-shadow only. */
+.hero .hl{position:absolute;pointer-events:none}
+/* 1 · foreground silhouettes (above the scene, below the character + copy) */
+.hl-sag{bottom:0;z-index:2;opacity:.9;line-height:0;color:#050403}
+.hl-sag svg{display:block;height:100%;width:auto;filter:brightness(0)}
+.hl-sag--l{left:-2vw;width:min(150px,calc((100vw - 1180px)/2 + 2vw - 14px));height:auto}
+.hl-sag--l svg{width:100%;height:auto}
+@media(max-width:1320px){.hl-sag--l{display:none}}
+.hl-sag--r{right:-3vw;height:min(34%,290px)}
+.hl-sag--r2{right:max(5vw,60px);height:min(20%,170px)}
+@media(max-width:1250px){.hl-sag--r2{display:none}}
+@media(max-width:900px){.hl-sag--l{display:none}.hl-sag--r{height:min(24%,200px);right:-6vw}}
+@media(max-width:600px){.hl-sag--r{display:none}}
+/* 2 · dust (behind text) */
+.hl-dust{inset:0;z-index:1;overflow:hidden}
+.hl-dust i{position:absolute;left:var(--x);top:var(--y);width:var(--s);height:var(--s);border-radius:50%;background:#ffd9a0;box-shadow:0 0 6px #ffb45a99;opacity:0;animation:hlDust var(--t) linear var(--d) infinite}
+@keyframes hlDust{0%{opacity:0;transform:translate3d(0,0,0)}15%{opacity:var(--o)}85%{opacity:var(--o)}100%{opacity:0;transform:translate3d(var(--dx),var(--dy),0)}}
+/* 3 · sun breathing + light-ray sweep */
+.hero .sc-sun{animation:hlSun 9s ease-in-out infinite}
+.hero .sc-halo{animation:hlHalo 9s ease-in-out infinite}
+@keyframes hlSun{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.05);opacity:.93}}
+@keyframes hlHalo{0%,100%{transform:scale(1);opacity:.85}50%{transform:scale(1.07);opacity:1}}
+.hl-sweep{inset:-10% -30%;z-index:1;opacity:0;mix-blend-mode:screen;
+ background:linear-gradient(100deg,transparent 42%,#ffd68a22 47%,#fff0c03a 50%,#ffd68a22 53%,transparent 58%);animation:hlSweep 12s ease-in-out infinite}
+@keyframes hlSweep{0%{opacity:0;transform:translate3d(-30%,0,0)}8%{opacity:1}30%{opacity:.9}38%,100%{opacity:0;transform:translate3d(30%,0,0)}}
+/* 4 · bottom fog, sits just above the hazard tape */
+.hl-fog{left:0;right:0;bottom:var(--tape-h,28px);height:26%;z-index:2;background:linear-gradient(0deg,#0a0c0aee 0,#0a0c0a88 38%,transparent 100%)}
+/* 5 · character parallax (own vars; the existing translate/animation on .hero-char is untouched) + faint hazmat rim */
+.hero-char>*{filter:drop-shadow(0 0 2px #F5C400aa) drop-shadow(0 0 10px #F5C40040);translate:calc(var(--hx,0)*4px) calc(var(--hy,0)*2px);transition:translate .4s ease-out}
+/* 6 · Co / Cu tile glow pulse */
+.hero h1 .el{animation:hlEl 6s ease-in-out infinite}
+.hero h1 .el:nth-of-type(2){animation-delay:-3s}
+@keyframes hlEl{0%,100%{box-shadow:0 5px 0 var(--tile-green-dark),0 0 30px #1e7a3c99}50%{box-shadow:0 5px 0 var(--tile-green-dark),0 0 44px #2fb85acc}}
+@media(max-width:600px){.hl-sweep{display:none}}
+@media(prefers-reduced-motion:reduce){.hl-dust,.hl-sweep{display:none}.hero .sc-sun,.hero .sc-halo,.hero h1 .el{animation:none}.hero-char>*{translate:none}}
+html.sc-hidden .hero .hl-dust i,html.sc-hidden .hl-sweep,html.sc-hidden .hero .sc-sun,html.sc-hidden .hero .sc-halo,html.sc-hidden .hero h1 .el{animation-play-state:paused}
+html.hl-hidden .hl-dust i,html.hl-hidden .hl-sweep{animation-play-state:paused}

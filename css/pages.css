@@ -101,3 +101,12 @@ background:repeating-linear-gradient(0deg,transparent 0 8px,#ffd9902e 8px 10px,t
 .cameo-img.char{width:100%}
 .cameo-cap{margin-top:8px;color:var(--bone);font-size:var(--t-s);max-width:none}
 @media(max-width:640px){.cast{grid-template-columns:1fr 1fr}.cameo--wide{grid-column:1/-1}}
+
+/* ════════ Boost — section heading hazard bar; mobile hero ════════ */
+.tools h2::after,.promise h2::after{content:"";display:block;width:80px;height:6px;margin-top:12px;background:repeating-linear-gradient(-45deg,var(--hazmat) 0 6px,var(--heisenberg) 6px 12px)}
+@media(max-width:600px){
+ .hero h1 .w{white-space:nowrap;overflow-wrap:normal}
+ .hero h1{max-width:none;text-wrap:balance}
+ .hero-copy{position:relative}
+ .hero-copy::before{content:"";position:absolute;inset:0 -20px;z-index:-1;pointer-events:none;background:linear-gradient(180deg,#0a0c0acc 0%,#0a0c0aee 55%,#0a0c0acc 100%)}
+}

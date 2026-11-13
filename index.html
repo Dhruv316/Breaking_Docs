@@ -7,11 +7,11 @@
 <meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
-<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css">
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css"><link rel="stylesheet" href="css/site-life.css"><link rel="stylesheet" href="css/hero-life.css">
 <script>(function(){try{var m=matchMedia('(prefers-reduced-motion: reduce)').matches,s=null;try{s=localStorage.getItem('bd.intro.v1')}catch(e){}
 document.documentElement.classList.add('js');if(!m&&!location.hash&&(!s||/[?&]intro\b/.test(location.search)))document.documentElement.classList.add('intro-on')}catch(e){}
 setTimeout(function(){document.documentElement.classList.remove('intro-on')},8000)})()</script>
-<script type="module" src="js/ui.js"></script></head>
+<script type="module" src="js/ui.js"></script><script defer src="js/site-life.js"></script><script defer src="js/hero-life.js"></script></head>
 <body>
 <div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-t">
  <div class="intro-stage"><div class="intro-tiles" aria-hidden="true">
@@ -44,6 +44,14 @@ setTimeout(function(){document.documentElement.classList.remove('intro-on')},800
   <div><h3 data-copy="home.soonNote"></h3><div class="grid" data-tiles='{"live":false,"soon":true}'></div></div></div>
 </div></section>
 <div class="tape"></div>
+<section class="how" id="how" data-scene="lab"><div class="wrap">
+ <h2 data-copy="how.heading"></h2>
+ <ol class="how-steps" data-copy-aria="how.aria">
+  <li class="how-card" style="--i:0"><span class="how-n mono" data-copy="how.steps.0.n"></span><span class="how-ico" aria-hidden="true" data-art="barrel"></span><h3 data-copy="how.steps.0.title"></h3><p data-copy="how.steps.0.line"></p></li>
+  <li class="how-card" style="--i:1"><span class="how-n mono" data-copy="how.steps.1.n"></span><span class="how-ico" aria-hidden="true" data-art="flask"></span><h3 data-copy="how.steps.1.title"></h3><p data-copy="how.steps.1.line"></p></li>
+  <li class="how-card" style="--i:2"><span class="how-n mono" data-copy="how.steps.2.n"></span><span class="how-ico" aria-hidden="true" data-art="money-stack"></span><h3 data-copy="how.steps.2.title"></h3><p data-copy="how.steps.2.line"></p></li>
+ </ol>
+</div></section>
 <section class="promise" id="about" data-scene="lab"><div class="wrap"><div class="grid" data-promise></div>
  <h2 class="cast-h" data-copy="about.heading"></h2>
  <ul class="cast" data-copy-aria="about.aria">
@@ -51,6 +59,21 @@ setTimeout(function(){document.documentElement.classList.remove('intro-on')},800
   <li class="cameo"><div class="cameo-img" data-char="walterJr"></div><p class="cameo-cap mono" data-copy="about.walterJr"></p></li>
   <li class="cameo cameo--wide"><div class="cameo-img" data-char="saulAlt"></div><p class="cameo-cap mono" data-copy="about.saul"></p></li>
  </ul></div></section>
+<section class="faq" id="faq" data-scene="night"><div class="wrap">
+ <h2 data-copy="faq.heading"></h2>
+ <div class="faq-list" data-copy-aria="faq.aria">
+  <div class="faq-item"><h3><button type="button" class="faq-q" id="faq-q0" aria-expanded="false" aria-controls="faq-a0"><span class="faq-no mono" aria-hidden="true">01</span><span class="faq-qt" data-copy="faq.items.0.q"></span><span class="faq-pm" aria-hidden="true"></span></button></h3>
+  <div class="faq-a" id="faq-a0" role="region" aria-labelledby="faq-q0"><div class="faq-in"><p data-copy="faq.items.0.a"></p></div></div></div>
+  <div class="faq-item"><h3><button type="button" class="faq-q" id="faq-q1" aria-expanded="false" aria-controls="faq-a1"><span class="faq-no mono" aria-hidden="true">02</span><span class="faq-qt" data-copy="faq.items.1.q"></span><span class="faq-pm" aria-hidden="true"></span></button></h3>
+  <div class="faq-a" id="faq-a1" role="region" aria-labelledby="faq-q1"><div class="faq-in"><p data-copy="faq.items.1.a"></p></div></div></div>
+  <div class="faq-item"><h3><button type="button" class="faq-q" id="faq-q2" aria-expanded="false" aria-controls="faq-a2"><span class="faq-no mono" aria-hidden="true">03</span><span class="faq-qt" data-copy="faq.items.2.q"></span><span class="faq-pm" aria-hidden="true"></span></button></h3>
+  <div class="faq-a" id="faq-a2" role="region" aria-labelledby="faq-q2"><div class="faq-in"><p data-copy="faq.items.2.a"></p></div></div></div>
+  <div class="faq-item"><h3><button type="button" class="faq-q" id="faq-q3" aria-expanded="false" aria-controls="faq-a3"><span class="faq-no mono" aria-hidden="true">04</span><span class="faq-qt" data-copy="faq.items.3.q"></span><span class="faq-pm" aria-hidden="true"></span></button></h3>
+  <div class="faq-a" id="faq-a3" role="region" aria-labelledby="faq-q3"><div class="faq-in"><p data-copy="faq.items.3.a"></p></div></div></div>
+  <div class="faq-item"><h3><button type="button" class="faq-q" id="faq-q4" aria-expanded="false" aria-controls="faq-a4"><span class="faq-no mono" aria-hidden="true">05</span><span class="faq-qt" data-copy="faq.items.4.q"></span><span class="faq-pm" aria-hidden="true"></span></button></h3>
+  <div class="faq-a" id="faq-a4" role="region" aria-labelledby="faq-q4"><div class="faq-in"><p data-copy="faq.items.4.a"></p></div></div></div>
+ </div>
+</div></section>
 </main>
 <footer id="footer"></footer>
 </body></html>

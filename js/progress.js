@@ -4,6 +4,7 @@ import {COPY,t} from './copy.js';
 import {fill,pick,clamp} from './format.js';
 
 /** @returns {string} a random themed loading line (COPY.md "Progress / loading lines") */
+const stage=s=>document.getElementById('tool')?.setAttribute('data-stage',s);
 export const loadingLine=()=>pick(COPY.progress.lines);
 
 /**
@@ -39,7 +40,7 @@ export function createRvProgress(host,{onCancel}={}){
    detail.textContent=d;
    if(p-lastSaid>=10||p===100){lastSaid=p;live.textContent=`${p}%${d?' — '+d:''}`;}
   },
-  start(){lastSaid=-10;bar.classList.add('is-running');pct.textContent='0%';rv.style.setProperty('--p',0);detail.textContent='';cycle();clearInterval(timer);timer=setInterval(cycle,2600);},
+  start(){stage('working');lastSaid=-10;bar.classList.add('is-running');pct.textContent='0%';rv.style.setProperty('--p',0);detail.textContent='';cycle();clearInterval(timer);timer=setInterval(cycle,2600);},
   stop(){bar.classList.remove('is-running');clearInterval(timer);timer=null;},
   destroy(){clearInterval(timer);host.replaceChildren();}
  };
@@ -90,7 +91,7 @@ export function createFlaskProgress(host,{onCancel}={}){
    liq.style.transform=`translateY(${248-p*1.42}px)`;                         // empty at the base, full at the neck
    if(p-lastSaid>=10||p===100){lastSaid=p;live.textContent=`${p}%${d?' — '+d:''}`;}
   },
-  start(){lastSaid=-10;bar.classList.add('is-running');verb.textContent=verbOf(0);liq.style.transform='translateY(248px)';detail.textContent='';cycle();clearInterval(timer);timer=setInterval(cycle,2600);},
+  start(){stage('working');lastSaid=-10;bar.classList.add('is-running');verb.textContent=verbOf(0);liq.style.transform='translateY(248px)';detail.textContent='';cycle();clearInterval(timer);timer=setInterval(cycle,2600);},
   stop(){bar.classList.remove('is-running');clearInterval(timer);timer=null;},
   destroy(){clearInterval(timer);host.replaceChildren();}
  };
@@ -134,7 +135,7 @@ export function createPileProgress(host,{onCancel}={}){
    pile.forEach((e,i)=>e.classList.toggle('is-on',p>=i/pile.length*100+4));           // …while the pile grows
    if(p-lastSaid>=10||p===100){lastSaid=p;live.textContent=`${verb.textContent} ${p}%`;}
   },
-  start(){lastSaid=-10;li=Math.floor(Math.random()*order.length);bar.classList.add('is-running');pct.textContent='0%';detail.textContent='';
+  start(){stage('working');lastSaid=-10;li=Math.floor(Math.random()*order.length);bar.classList.add('is-running');pct.textContent='0%';detail.textContent='';
    stack.forEach(e=>e.classList.remove('is-gone'));pile.forEach(e=>e.classList.remove('is-on'));cycle();clearInterval(timer);timer=setInterval(cycle,2800);},
   stop(){bar.classList.remove('is-running');clearInterval(timer);timer=null;},
   destroy(){clearInterval(timer);host.replaceChildren();}

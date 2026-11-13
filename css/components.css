@@ -340,3 +340,41 @@ html.sc-hidden .pa-sp,html.sc-hidden .pa-bub{animation-play-state:paused}
 /* Remove pages: pages marked for removal are dimmed and crossed out (new classes only) */
 .pggrid--cut .pgtile.is-picked{outline-color:var(--sunset-red);filter:grayscale(.6) brightness(.8);opacity:.62}
 .pggrid--cut .pgtile.is-picked::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(to top right,transparent calc(50% - 3px),var(--sunset-red) calc(50% - 3px) calc(50% + 3px),transparent calc(50% + 3px)),linear-gradient(to bottom right,transparent calc(50% - 3px),var(--sunset-red) calc(50% - 3px) calc(50% + 3px),transparent calc(50% + 3px))}
+
+/* ════════ Boost — Home tile icon badge, blurb, hover spotlight ════════ */
+.tile .ico{position:absolute;top:30px;left:50%;transform:translateX(-50%);z-index:2;display:grid;place-items:center;padding:5px 8px;background:var(--bone);border:2px solid var(--heisenberg);border-radius:12px;box-shadow:0 2px 0 #0006}
+.tile .ico svg{display:block}
+#tools a.tile:has(.ico) .sym{padding-top:70px;padding-bottom:34px;font-size:clamp(48px,7vw,80px)}
+#tools a.tile:has(.ico) .name{bottom:34px}
+.tile .desc{position:absolute;left:10px;right:10px;bottom:10px;text-align:center;font:400 var(--t-s)/1.2 var(--f-body);color:#e6dfcb}
+a.tile:hover{box-shadow:inset 0 2px 0 #fff3,0 14px 0 #07290f,0 0 0 2px var(--hazmat),0 0 var(--glow-radius) var(--glow-spread) var(--glow-color),0 20px 30px #000a}
+.tile .spot{position:absolute;inset:0;z-index:1;pointer-events:none;opacity:0;transition:opacity .2s;background:radial-gradient(circle 120px at var(--mx,50%) var(--my,50%),#ffffff33,transparent 70%)}
+@media(pointer:fine){a.tile:hover .spot{opacity:1}}
+@media(prefers-reduced-motion:reduce){.tile .spot{display:none}}
+
+/* ════════ Part 5 — "Cook something else" row, hazard-tape messages, shared glow ════════ */
+a.tile:focus-visible{box-shadow:inset 0 2px 0 #fff3,0 14px 0 #07290f,0 0 0 2px var(--hazmat),0 0 var(--glow-radius) var(--glow-spread) var(--glow-color),0 20px 30px #000a}
+[data-tiles] a.tile:has(.ico) .sym{padding-top:70px;padding-bottom:34px;font-size:clamp(48px,7vw,80px)}
+[data-tiles] a.tile:has(.ico) .name{bottom:34px}
+.res-more{width:100%;min-width:0;display:grid;gap:6px;margin-top:6px}
+.res-more h3{font:var(--t-l)/1.1 var(--f-display);letter-spacing:.03em;color:var(--bone);text-shadow:0 3px 0 var(--tile-green-dark)}
+.cook-row{display:flex;gap:16px;list-style:none;margin:0;padding:14px 8px 26px 4px;overflow-x:auto;overflow-y:hidden;scroll-snap-type:x proximity;-webkit-overflow-scrolling:touch;overscroll-behavior-x:contain}
+.cook-row>li{flex:none;scroll-snap-align:start}
+.cook-row .tile{width:148px;height:176px;aspect-ratio:auto}
+.cook-row .tile .ico{top:30px}
+.cook-row .tile .sym{padding:76px 0 40px;font-size:48px}
+.cook-row .tile .name{bottom:12px;font-size:var(--t-s);padding:0 6px}
+@media(max-width:700px){.cook-row{margin-right:calc(-1*clamp(20px,5vw,56px));padding-right:clamp(20px,5vw,56px);scroll-padding-left:4px}}
+@media(min-width:701px){.cook-row{flex-wrap:wrap;overflow:visible}}
+/* messages + toasts: hazard-tape left edge, 48px close, wrap on phones */
+.x-close{flex:none;width:48px;height:48px;display:grid;place-items:center;padding:0;background:transparent;color:var(--bone);border:2px solid currentColor;font:28px/1 var(--f-display);cursor:pointer}
+.x-close:hover{color:var(--hazmat)}.x-close:focus-visible{outline:3px solid var(--blue-sky);outline-offset:2px}
+.warn.has-x{padding-right:64px}.warn .x-close{position:absolute;top:0;right:0;border-width:0 0 2px 2px}
+.toast{display:flex;align-items:center;gap:12px;max-width:min(560px,calc(100vw - 32px));padding:6px 6px 6px 30px;overflow:hidden;white-space:normal;overflow-wrap:anywhere;text-align:left}
+.toast::before{content:"";position:absolute;inset:0 auto 0 0;width:12px;background:repeating-linear-gradient(-45deg,var(--hazmat) 0 8px,#0A0C0A 8px 16px)}
+.toast-msg{padding:6px 0;line-height:1.15}
+.errpanel::after{content:"";position:absolute;inset:0 auto 0 0;width:12px;z-index:4;pointer-events:none;background:repeating-linear-gradient(-45deg,var(--hazmat) 0 8px,#0A0C0A 8px 16px)}
+.err-body{padding-left:clamp(32px,5vw,56px);overflow-wrap:anywhere}
+.errpanel .btn{min-height:56px}
+@media(max-width:700px){.err-body h2{font-size:var(--t-xl);overflow-wrap:anywhere}.res-actions .btn{white-space:normal;text-align:center}}
+@media(prefers-reduced-motion:reduce){.cook-row{scroll-behavior:auto}}

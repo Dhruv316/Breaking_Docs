@@ -7,13 +7,13 @@
 <meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
-<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css">
-<script type="module" src="js/ui.js"></script>
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css"><link rel="stylesheet" href="css/site-life.css">
+<script type="module" src="js/ui.js"></script><script defer src="js/site-life.js"></script>
 <script type="module">import {init} from './js/tools/ppt-to-pdf.js';init();</script></head>
 <body>
 <div id="topbar"></div>
 <main>
-<section class="tool tool--office" id="tool" data-scene="office" data-state="idle">
+<section class="tool tool--office" id="tool" data-stage="idle" data-scene="office" data-state="idle">
  <div class="tool-shade"></div>
  <div class="tool-char tool-char--saul" data-char="saul"></div>
  <div class="wrap tool-body">
@@ -22,6 +22,12 @@
    <div class="tile tool-tile" id="title-tile" aria-hidden="true"></div>
    <div><h1 data-copy="tools.Pp.name"></h1><p class="tool-promise" data-copy="tools.Pp.promise"></p></div>
   </header>
+
+  <ol class="stepper" aria-label="" data-copy-aria="stepper.aria">
+   <li class="step"><span class="step-tile" aria-hidden="true"><b>1</b><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span class="step-l mono" data-copy="stepper.drop"></span></li>
+   <li class="step"><span class="step-tile" aria-hidden="true"><b>2</b><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span class="step-l mono" data-copy="stepper.cook"></span></li>
+   <li class="step"><span class="step-tile" aria-hidden="true"><b>3</b><svg viewBox="0 0 16 16"><path d="M3 8.5l3.2 3.2L13 4.8"/></svg></span><span class="step-l mono" data-copy="stepper.download"></span></li>
+  </ol>
 
   <div data-show="idle filesChosen">
    <div class="tray" id="tray">
@@ -43,6 +49,11 @@
      </div>
     </div>
    </div>
+     <ul class="trust mono">
+    <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5l5.5 2v4.2c0 3.1-2.3 5.6-5.5 6.8-3.2-1.2-5.5-3.7-5.5-6.8V3.5z"/></svg><span data-copy="trust.none"></span></li>
+    <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M1.5 2.5h6l7 7-5 5-7-7z"/><circle cx="5" cy="6" r="1"/></svg><span data-copy="trust.signup"></span></li>
+    <li><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><path d="M1.5 6h13"/></svg><span data-copy="trust.browser"></span></li>
+   </ul>
   </div>
 
   <div class="msgs" id="msgs" aria-live="polite"></div>
@@ -64,7 +75,7 @@
    </details>
   </section>
 
-  <div class="go-row" data-show="idle filesChosen"><button type="button" class="btn go" id="go" disabled><span></span></button></div>
+  <div class="go-row" data-show="idle filesChosen"><button type="button" class="btn go" id="go" disabled><span></span><span class="go-hint" aria-hidden="true"><svg viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="1"/><path d="M5 7V5a3 3 0 016 0v2"/></svg><span data-copy="go.hint"></span></span></button></div>
 
   <section class="progress-panel" id="progress" data-show="processing" hidden></section>
 
