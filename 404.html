@@ -14,7 +14,7 @@
   if(d.readyState==='loading'){d.addEventListener('DOMContentLoaded',function(){boot(base);});return;}   /* ui.js needs the body parsed */
   if(base){var b=d.createElement('base');b.href=base;d.head.insertBefore(b,d.head.firstChild);}
   var ic=d.createElement('link');ic.rel='icon';ic.href='assets/favicon.png';d.head.appendChild(ic);
-  ['tokens','base','components','pages','grade','scenes','motion','site-life'].forEach(function(n){var l=d.createElement('link');l.rel='stylesheet';l.href='css/'+n+'.css';d.head.appendChild(l);});
+  ['tokens','base','components','pages','grade','scenes','motion','site-life','nav-extras'].forEach(function(n){var l=d.createElement('link');l.rel='stylesheet';l.href='css/'+n+'.css';d.head.appendChild(l);});
   var s=d.createElement('script');s.type='module';s.src='js/ui.js';
   s.onload=function(){import(new URL('js/copy.js',d.baseURI).href).then(function(m){d.title=m.t('notFound.heading')+' \u2014 '+m.t('brand.name');}).catch(function(){});};
   d.head.appendChild(s);var sl=d.createElement('script');sl.src='js/site-life.js';sl.defer=true;d.head.appendChild(sl);}

@@ -1,5 +1,6 @@
 /* copy.js — every user-facing string (mirrors COPY.md). Edit here only. */
 export const COPY={
+ticker:{text:'PURE · PRIVATE · FREE · NO SIGNUP · BREAK IT DOWN · BUILD IT BACK ·'},
 brand:{name:'Breaking Docs',tagline:'Break it down. Build it back.',footer:'Your files never leave this browser. That\'s the business model.'},
 nav:{tools:'Tools',about:'About',aria:'Main',skip:'Skip to content'},
 credit:{by:'Created by',aria:'Created by Dhruv Rane',
@@ -99,3 +100,19 @@ export const TOOLS=[
 {n:7,sym:'Wm',name:'Watermark'},{n:8,sym:'Pn',name:'Page numbers'},{n:9,sym:'Ul',name:'Unlock PDF'}];
 /** @param {string} path dot path into COPY */
 export const t=p=>p.split('.').reduce((o,k)=>o?.[k],COPY)??'';
+/* Additions: mega-menu, command palette, footer columns, privacy page, Cook Report card. */
+Object.assign(COPY,{
+menu:{label:'Tools menu',hint:'Ctrl K',hintAria:'Open quick search',hintKeys:'Control+K'},
+palette:{title:'Quick search',label:'Go to a tool or page',ph:'Type a tool or page…',list:'Results',empty:'Nothing matches that.',count:'{n} results',close:'Close',home:'Home',privacy:'Privacy',pageSym:{home:'Ho',privacy:'Pv'},kindTool:'Tool',kindPage:'Page',hintNav:'↑↓ to move · Enter to go · Esc to close'},
+footerCols:{aria:'Site links',tools:'Tools',site:'Site',promise:'Promise',home:'Home',how:'How it works',faq:'FAQ',privacy:'Privacy',
+ promises:['Nothing is uploaded.','No signup.','Free.']},
+privacy:{title:'Privacy',heading:'Privacy',sub:'Plain words. No fine print.',back:'Back to the lab',
+ sections:[
+  {h:'Your files stay here',p:'Everything happens inside your browser. Your files never leave your device and are never sent to a server.'},
+  {h:'No accounts',p:'There is nothing to sign up for. We don\'t know who you are and we don\'t ask.'},
+  {h:'No tracking cookies',p:'No analytics, no ad trackers, no tracking cookies.'},
+  {h:'Public libraries and fonts',p:'To do the work, your browser fetches helper libraries and fonts from public CDNs. Those requests carry no part of your files.'},
+  {h:'Your sound preference',p:'If you turn the sound on or off, that choice is remembered in this browser only. It is never sent anywhere.'}]},
+share:{button:'Share your batch',title:'Your Cook Report',aria:'Cook Report card',preview:'Preview of your Cook Report card',download:'Download PNG',share:'Share',close:'Close',building:'Cooking the card…',fail:'Couldn\'t build the card in this browser.',shared:'Shared.',
+ file:'breaking-docs-cook-report.png',brand:'breaking docs',pagesWord:'{n} PAGES',pageWord:'1 PAGE',shareTitle:'My Cook Report',shareText:'Cooked with Breaking Docs.'}
+});

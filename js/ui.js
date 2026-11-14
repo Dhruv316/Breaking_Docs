@@ -10,6 +10,7 @@ import {initMotion} from './motion.js';
 import {initIntro} from './intro.js';
 import {installGrade} from './grade.js';
 import {initDismiss} from './dismiss.js';
+import {initExtras} from './nav-extras.js';
 export {reducedMotion,toast};
 const $=(s,r=document)=>r.querySelector(s);
 /** Wraps the first matching occurrence of each symbol in the text as an element tile ("Co"ok, do"Cu"ments). */
@@ -57,7 +58,7 @@ function spotlight(){if(!matchMedia('(pointer: fine)').matches||matchMedia('(pre
   a.style.setProperty('--mx',(e.clientX-r.left)+'px');a.style.setProperty('--my',(e.clientY-r.top)+'px');});}
 function loadArt(){if(window.Art){decorateTiles();return;}const sc=document.createElement('script');sc.src='js/art/sprites.js';sc.onload=decorateTiles;document.head.appendChild(sc);}
 /** Boots every page: css vars, chrome, copy, motion, title music, eggs, intro. */
-export function init(){installCssVars();installGrade();navbar();if($('#footer'))footer();bind();initScenes();initFx();initMotion();initEggs();
+export function init(){installCssVars();installGrade();navbar();if($('#footer'))footer();bind();initExtras();initScenes();initFx();initMotion();initEggs();
  if(reducedMotion)document.querySelectorAll('svg').forEach(s=>s.pauseAnimations?.());
  initTheme(ASSETS.audio.intro.src);loadArt();spotlight();initDismiss();
  if($('#hero'))initIntro();}

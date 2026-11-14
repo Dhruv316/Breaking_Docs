@@ -1,4 +1,4 @@
-Layout report 2026-11-13T18:28:36.912Z  base=http://localhost:8123
+Layout report 2026-11-14T08:24:25.094Z  base=http://localhost:8123
 
 === 404.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
 
@@ -11,6 +11,8 @@ Layout report 2026-11-13T18:28:36.912Z  base=http://localhost:8123
 === merge-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
 
 === ppt-to-pdf.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
+
+=== privacy.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
 
 === remove-pages.html: 0 issue(s) — overflow 0, overlap 0, art-fg overlap 0, tap<44 0, text<14 0
 

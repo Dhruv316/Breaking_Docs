@@ -3,6 +3,7 @@ import {scene,char,prop} from './assets.js';
 import {COPY,t,TOOLS} from './copy.js';
 import {fill,esc,formatBytes} from './format.js';
 import {reducedMotion} from './ui-kit.js';
+import {addShare} from './cook-report.js';
 
 /** One burst of ~30 crystal shards from behind the stamp, timed to the slam's impact (.43 s after the panel appears). Pure decoration: aria-hidden,
  *  pointer-events none, transform/opacity animation, removed after 1.5 s. Skipped under reduced motion. Runs once per result screen. */
@@ -56,5 +57,6 @@ export function showResult(host,{blob,filename,pages,stamp=COPY.result.stamp,not
  host.querySelector('.res-again').addEventListener('click',()=>onAgain&&onAgain());
  host.querySelector('.res-head').focus({preventScroll:true});
  burst(host);moreIcons(host);
+ addShare(host,{stamp,stats:stats||[pageText,formatBytes(blob.size)],pages,blobSize:blob.size});
  return {destroy(){URL.revokeObjectURL(url);partUrls.forEach(u=>URL.revokeObjectURL(u));host.replaceChildren();}};
 }

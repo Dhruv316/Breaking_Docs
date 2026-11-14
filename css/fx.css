@@ -1,0 +1,57 @@
+/* fx.css — additive: hazard ticker, Home tile tilt/flip, Home parallax, heading decode, tool-page ambience.
+   transform + opacity only; off under prefers-reduced-motion; paused when hidden (html.fx-hidden). */
+.ticker{position:relative;height:40px;overflow:hidden;background:#F5C400;color:#0A0C0A;contain:paint}
+.ticker::before,.ticker::after{content:"";position:absolute;left:0;right:0;height:6px;z-index:1;background:repeating-linear-gradient(-45deg,#0A0C0A 0 10px,#F5C400 10px 20px)}
+.ticker::before{top:0}.ticker::after{bottom:0}
+.tk-track{position:absolute;left:0;top:6px;height:28px;display:flex;width:max-content;white-space:nowrap;font:700 15px/28px var(--f-mono,ui-monospace,monospace);letter-spacing:.14em;animation:tkgo 90s linear infinite;will-change:transform}
+.tk-track span{padding-right:.6em}
+@keyframes tkgo{to{transform:translate3d(-50%,0,0)}}
+.fx-hidden .tk-track,.fx-hidden .amb *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){.tk-track{animation:none}}
+
+/* Home tiles: periodic-table flip-in (once) + pointer tilt */
+@keyframes tflip{from{transform:perspective(700px) rotateX(-90deg);opacity:0}to{transform:perspective(700px) rotateX(0);opacity:1}}
+.js .tf>.tile{opacity:0}
+.js .tf.tf-in>.tile{opacity:1;animation:tflip .7s var(--ease) backwards;animation-delay:calc(var(--i,0)*70ms);transform-origin:50% 100%}
+a.tile.tilt{transition:transform .18s var(--ease),border-color .18s,box-shadow .18s,rotate .2s ease-out}
+[data-tiles].tf{perspective:900px}
+@media(prefers-reduced-motion:reduce){.js .tf>.tile{opacity:1}.js .tf.tf-in>.tile{animation:none}}
+
+/* Home parallax: scene drifts via the `translate` property */
+.fx-px{overflow:clip}
+.fx-px>.scene{inset:-6% 0;will-change:transform}
+
+/* heading decode: fixed-width glyph slots so the layout never moves */
+.dc-c{display:inline-block;text-align:center;white-space:nowrap;overflow:visible}
+
+/* ambience */
+.amb{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden;contain:strict}
+.amb *{pointer-events:none}
+.amb i{position:absolute;display:block;will-change:transform,opacity}
+.ap{left:var(--x);bottom:0;width:var(--s);height:var(--s);opacity:0;animation:var(--k) var(--t) linear var(--d) infinite}
+.amb-light,.amb-glow,.amb-shim{inset:0;left:0;right:0}
+/* bubbles + blue-green flicker */
+.amb--bubbles .ap{border-radius:50%;border:1.5px solid #8fe8ffcc;background:radial-gradient(circle at 30% 30%,#ffffff99,#55d0ff22 60%,transparent 70%);--k:ambRise}
+.amb--bubbles .amb-light{background:radial-gradient(ellipse at 50% 100%,#3fe0c055,transparent 65%),radial-gradient(ellipse at 20% 0%,#55d0ff33,transparent 60%);animation:ambFlick 5.5s ease-in-out infinite}
+@keyframes ambRise{0%{opacity:0;transform:translate3d(0,0,0)}12%{opacity:.75}85%{opacity:.5}100%{opacity:0;transform:translate3d(var(--dx),calc(var(--ah)*-1),0)}}
+@keyframes ambFlick{0%,100%{opacity:.35}30%{opacity:.7}55%{opacity:.45}78%{opacity:.8}}
+/* warm dust + heat shimmer */
+.amb--dust .ap{border-radius:50%;background:#ffd9a0;--k:ambDrift;bottom:auto;top:var(--y)}
+@keyframes ambDrift{0%{opacity:0;transform:translate3d(0,0,0)}20%{opacity:.7}80%{opacity:.4}100%{opacity:0;transform:translate3d(var(--dx),var(--dy),0)}}
+.amb-shim{top:auto;bottom:6%;height:22%;opacity:.3;mix-blend-mode:screen;background:repeating-linear-gradient(0deg,transparent 0 7px,#ffd9902e 7px 9px,transparent 9px 16px);-webkit-mask-image:linear-gradient(transparent,#000 40%,#000 70%,transparent);mask-image:linear-gradient(transparent,#000 40%,#000 70%,transparent);animation:ambHeat 5.5s ease-in-out infinite}
+@keyframes ambHeat{0%,100%{transform:translate3d(0,0,0) skewX(0)}30%{transform:translate3d(6px,0,0) skewX(.8deg)}65%{transform:translate3d(-5px,0,0) skewX(-.6deg)}}
+/* lamp flicker + beam dust */
+.amb--lamp .amb-light{background:radial-gradient(ellipse at 75% 0%,#ffb85a55,transparent 60%);animation:ambLamp 7s linear infinite}
+@keyframes ambLamp{0%,100%{opacity:.8}38%{opacity:.8}41%{opacity:.5}44%{opacity:.9}47%{opacity:.6}52%{opacity:.85}}
+.amb--lamp .amb-beam{top:-10%;height:125%;width:14%;left:var(--x);background:linear-gradient(180deg,#ffd08a2e,#ffd08a12 55%,transparent 90%);transform:skewX(-14deg);opacity:.9}
+.amb--lamp .ap{border-radius:50%;background:#ffe6b8;--k:ambDrift;bottom:auto;top:var(--y)}
+/* steam */
+.amb--steam .ap{width:var(--s);height:calc(var(--s)*2.2);border-radius:50%;background:radial-gradient(ellipse,#e8f4ffaa 0,#e8f4ff33 45%,transparent 70%);--k:ambSteam}
+@keyframes ambSteam{0%{opacity:0;transform:translate3d(0,0,0) scale(.6)}25%{opacity:.4}100%{opacity:0;transform:translate3d(var(--dx),calc(var(--ah)*-.7),0) scale(1.6)}}
+/* sparks (bottom corners, occasional) */
+.amb--sparks .ap{width:var(--s);height:var(--s);border-radius:50%;background:#ffd36a;box-shadow:0 0 6px 2px #ff9a3a;left:var(--x);--k:ambSpark}
+@keyframes ambSpark{0%{opacity:0;transform:translate3d(0,0,0)}2%{opacity:1}22%{opacity:.9;transform:translate3d(calc(var(--dx)*.7),calc(var(--dy)*-1),0)}34%,100%{opacity:0;transform:translate3d(var(--dx),calc(var(--dy)*-.35),0)}}
+/* embers + bottom glow */
+.amb--embers .ap{border-radius:50%;background:radial-gradient(circle,#ffd36a,#ff6a1a 60%,transparent 72%);--k:ambRise}
+.amb--embers .amb-glow{top:auto;height:38%;background:linear-gradient(0deg,#ff6a1a66,#ff6a1a22 45%,transparent);animation:ambFlick 4.5s ease-in-out infinite}
+@media(prefers-reduced-motion:reduce){.amb,.tk-track{display:none}.fx-px>.scene{translate:none!important}}

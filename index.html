@@ -7,11 +7,11 @@
 <meta property="og:image" content="assets/og-image.jpg"><link rel="icon" href="assets/favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Barlow:wght@400;600&family=Share+Tech+Mono&display=swap">
-<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css"><link rel="stylesheet" href="css/site-life.css"><link rel="stylesheet" href="css/hero-life.css">
+<link rel="stylesheet" href="css/tokens.css"><link rel="stylesheet" href="css/base.css"><link rel="stylesheet" href="css/components.css"><link rel="stylesheet" href="css/pages.css"><link rel="stylesheet" href="css/grade.css"><link rel="stylesheet" href="css/scenes.css"><link rel="stylesheet" href="css/motion.css"><link rel="stylesheet" href="css/site-life.css"><link rel="stylesheet" href="css/nav-extras.css"><link rel="stylesheet" href="css/hero-life.css">
 <script>(function(){try{var m=matchMedia('(prefers-reduced-motion: reduce)').matches,s=null;try{s=localStorage.getItem('bd.intro.v1')}catch(e){}
 document.documentElement.classList.add('js');if(!m&&!location.hash&&(!s||/[?&]intro\b/.test(location.search)))document.documentElement.classList.add('intro-on')}catch(e){}
 setTimeout(function(){document.documentElement.classList.remove('intro-on')},8000)})()</script>
-<script type="module" src="js/ui.js"></script><script defer src="js/site-life.js"></script><script defer src="js/hero-life.js"></script></head>
+<script type="module" src="js/ui.js"></script><script defer src="js/site-life.js"></script><script defer src="js/hero-life.js"></script><script type="module" src="js/home-fx.js"></script><link rel="stylesheet" href="css/fx.css"></head>
 <body>
 <div class="intro" id="intro" hidden role="dialog" aria-modal="true" aria-labelledby="intro-t">
  <div class="intro-stage"><div class="intro-tiles" aria-hidden="true">
@@ -37,6 +37,7 @@ setTimeout(function(){document.documentElement.classList.remove('intro-on')},800
  </div>
  <div class="tape"></div>
 </section>
+<div class="ticker" aria-hidden="true" data-ticker></div>
 <section class="tools" id="tools" data-scene="night"><div class="wrap">
  <h2 data-copy="home.gridHeading"></h2>
  <div class="grid reveal" data-tiles='{"live":true}'></div>
@@ -44,6 +45,7 @@ setTimeout(function(){document.documentElement.classList.remove('intro-on')},800
   <div><h3 data-copy="home.soonNote"></h3><div class="grid" data-tiles='{"live":false,"soon":true}'></div></div></div>
 </div></section>
 <div class="tape"></div>
+<div class="ticker" aria-hidden="true" data-ticker></div>
 <section class="how" id="how" data-scene="lab"><div class="wrap">
  <h2 data-copy="how.heading"></h2>
  <ol class="how-steps" data-copy-aria="how.aria">
