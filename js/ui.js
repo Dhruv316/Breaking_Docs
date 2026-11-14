@@ -11,6 +11,7 @@ import {initIntro} from './intro.js';
 import {installGrade} from './grade.js';
 import {initDismiss} from './dismiss.js';
 import {initExtras} from './nav-extras.js';
+import './visibility-governor.js';
 export {reducedMotion,toast};
 const $=(s,r=document)=>r.querySelector(s);
 /** Wraps the first matching occurrence of each symbol in the text as an element tile ("Co"ok, do"Cu"ments). */

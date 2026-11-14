@@ -55,7 +55,7 @@
 /* ═════ Lab interior (Home "About" strip) ═════ */
 .sc-lwall{background:radial-gradient(ellipse at 50% 38%,#0f5a4a 0,#06281f 52%,#020a07 100%)}
 .sc-lbeams i{position:absolute;top:-10%;height:125%;width:15vw;mix-blend-mode:screen;background:linear-gradient(180deg,#55d0ff3a,#3fe0a01a 45%,transparent 85%);transform:skewX(-14deg);animation:scBeam 8s ease-in-out infinite alternate}
-.sc-lbeams i:nth-child(1){left:10%}.sc-lbeams i:nth-child(2){left:44%;animation-delay:-3s}.sc-lbeams i:nth-child(3){left:76%;animation-delay:-5s}
+.sc-lbeams i:nth-child(1){left:10%}.sc-lbeams i:nth-child(2){left:58%;animation-delay:-3s}.sc-lbeams i:nth-child(3){left:76%;animation-delay:-5s}
 @keyframes scBeam{from{opacity:.5}to{opacity:1}}
 .sc-steam{position:absolute;bottom:20%;width:var(--w);height:calc(var(--w)*2.2);border-radius:50%;opacity:0;background:radial-gradient(ellipse,#dcfff0 0,#dcfff044 40%,transparent 70%);animation:scSteam var(--t) ease-out var(--d) infinite}
 @keyframes scSteam{0%{opacity:0;transform:translate3d(0,0,0) scale(.55)}22%{opacity:.34}100%{opacity:0;transform:translate3d(24px,-280px,0) scale(1.5)}}

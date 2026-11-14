@@ -28,8 +28,9 @@ const rock=(x,w,h,c,rim)=>{const d=`M${x} 520L${x} 500C${x+w*.04} ${500-h*.7} ${
  return `<path d="${d}" fill="${c}"/>${rim?`<path d="M${x+w*.04} ${500-h*.62}C${x+w*.12} ${500-h*.92} ${x+w*.3} ${500-h*.99} ${x+w*.5} ${500-h*.93}" fill="none" stroke="${rim}" stroke-width="3" stroke-linecap="round" opacity=".7"/>`:''}`;};
 const layer=(cls,kx,ky,inner,full)=>`<div class="sc-l ${cls}" data-kx="${kx}" data-ky="${ky}"${full?' data-full':''}>${inner}</div>`;
 const ground=(vb,inner,defs='')=>`<svg viewBox="0 0 1920 ${vb}" preserveAspectRatio="xMidYMax slice" focusable="false" aria-hidden="true"><defs>${defs}</defs>${inner}</svg>`;
+const LOW=matchMedia('(pointer: coarse)').matches||innerWidth<=600;
 const dust=n=>Array.from({length:n},(_,i)=>{const r=rng(900+i*7);
- return `<i class="sc-dust" ${i>=6?'data-full ':''}style="left:${f1(r()*100)}%;bottom:${f1(8+r()*52)}%;--s:${f1(2+r()*3)}px;--dx:${f1(60+r()*160)}px;--dy:${f1(-30-r()*90)}px;--t:${f1(11+r()*12)}s;--d:${f1(-r()*20)}s"></i>`}).join('');
+ return `<i class="sc-dust" ${i>=4?'data-full ':''}style="left:${f1(r()*100)}%;bottom:${f1(8+r()*52)}%;--s:${f1(2+r()*3)}px;--dx:${f1(60+r()*160)}px;--dy:${f1(-30-r()*90)}px;--t:${f1(11+r()*12)}s;--d:${f1(-r()*20)}s"></i>`}).join('');
 
 /** Desert sunset, Home hero. 5 depth layers + sun/rays + dust + heat shimmer + lens flare. */
 export function sunsetScene(){
@@ -50,8 +51,8 @@ export function sunsetScene(){
  ${layer('sc-mid',26,.03,mid,false)}
  <div class="sc-shimmer" data-full></div>
  ${layer('sc-fg',46,0,fg,false)}
- ${layer('sc-dustwrap',20,.02,dust(14),false)}
- ${layer('sc-flare',34,.02,'<i style="--k:.28;--r:70px"></i><i style="--k:.46;--r:34px"></i><i style="--k:.7;--r:110px"></i><i style="--k:.92;--r:44px"></i>',true)}
+ ${layer('sc-dustwrap',20,.02,dust(LOW?2:6),false)}
+ ${layer('sc-flare',34,.02,'<i style="--k:.34;--r:70px"></i><i style="--k:.8;--r:110px"></i>',true)}
 </div>`;}
 
 /** Desert night, footer / 404 / dark sections: starfield, moon + glow, mesas, cacti, mist. */
@@ -59,7 +60,7 @@ export function nightScene(){
  const r=rng(77),id='sn'+(uid++);let still='',tw=['','',''];
  for(let i=0;i<120;i++){const x=f1(r()*1920),y=f1(Math.pow(r(),1.6)*620),big=r()<.12,rad=big?f1(1.6+r()):f1(.6+r()*.8),o=f1(.55+r()*.45);
   const c=`<circle cx="${x}" cy="${y}" r="${rad}" fill="${big?'#e9f0ff':'#fff'}" opacity="${o}"/>`;
-  if(i%10===0)tw[(i/10)%3|0]+=c;else still+=c;}
+  if(i%(LOW?40:24)===0)tw[(i/(LOW?40:24))%3|0]+=c;else still+=c;}
  const sky=`<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMin slice" focusable="false" aria-hidden="true">${still}<g class="sc-tw sc-tw1">${tw[0]}</g><g class="sc-tw sc-tw2">${tw[1]}</g><g class="sc-tw sc-tw3">${tw[2]}</g></svg>`;
  const farD=ridge(31,430,50,110,160,320,.4),midD=ridge(47,478,60,120,180,360,.34);
  const far=ground(500,`<path d="${farD}" fill="#14294f"/><path d="${farD}" fill="none" stroke="#9ab0f0" stroke-width="2.5" opacity=".55"/>`);
@@ -72,7 +73,7 @@ export function nightScene(){
  ${layer('sc-moonwrap',9,.06,'<div class="sc-moon"></div>',false)}
  ${layer('sc-far',14,.04,far,true)}
  ${layer('sc-mid',24,.02,mid,false)}
- ${layer('sc-mist',0,0,'<i></i><i></i>',true)}
+ ${layer('sc-mist',0,0,'<i></i>',true)}
  ${layer('sc-fg',40,0,fg,false)}
 </div>`;}
 
@@ -88,13 +89,13 @@ export function labScene(){
    ${Array.from({length:7},(_,i)=>`<rect x="${130+i*290}" y="${y-230}" width="10" height="230" fill="#041510"/>`).join('')}`;
   for(let i=0;i<9;i++){const x=90+i*215+r()*50,k=r(),s=.8+r()*.5;
    glass+=k<.34?flask(x,y,s,c):k<.67?beaker(x,y,s,c):tubes(x,y,c);}});
- const steam=Array.from({length:6},(_,i)=>`<i class="sc-steam" ${i>=3?'data-full ':''}style="left:${12+i*15+r()*6}%;--w:${f1(90+r()*90)}px;--t:${f1(9+r()*6)}s;--d:${f1(-r()*12)}s"></i>`).join('');
+ const steam=Array.from({length:LOW?2:3},(_,i)=>`<i class="sc-steam" ${i>=2?'data-full ':''}style="left:${12+i*15+r()*6}%;--w:${f1(90+r()*90)}px;--t:${f1(9+r()*6)}s;--d:${f1(-r()*12)}s"></i>`).join('');
  const wall=`<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true"><defs>
   <linearGradient id="${id}sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#7fe8d0"/><stop offset="1" stop-color="#0f3a2e"/></linearGradient></defs>${back}</svg>`;
  const gl=`<svg viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" focusable="false" aria-hidden="true">${glass}</svg>`;
  return `<div class="sc sc--lab" data-par="xy" aria-hidden="true">
  ${layer('sc-lwall',3,.04,wall,false)}
- ${layer('sc-lbeams',10,.06,'<i></i><i></i><i></i>',true)}
+ ${layer('sc-lbeams',10,.06,'<i></i><i></i>',true)}
  ${layer('sc-lglass',18,.03,gl,false)}
  ${layer('sc-steamwrap',26,.02,steam,false)}
  <div class="sc-lglow"></div>

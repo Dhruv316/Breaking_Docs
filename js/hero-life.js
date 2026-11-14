@@ -12,7 +12,7 @@
   if(!rm)dust();
  }
  function dust(){
-  var small=matchMedia('(pointer: coarse)').matches||innerWidth<=600,n=small?12:28,d='<div class="hl hl-dust" aria-hidden="true">';
+  var small=matchMedia('(pointer: coarse)').matches||innerWidth<=600,n=small?3:11,d='<div class="hl hl-dust" aria-hidden="true">';
   for(var i=0;i<n;i++){var r=Math.random;
    d+='<i style="--x:'+(r()*100).toFixed(1)+'%;--y:'+(20+r()*75).toFixed(1)+'%;--s:'+(2+r()*3.5).toFixed(1)+'px;--o:'+(.25+r()*.5).toFixed(2)+';--t:'+(16+r()*18).toFixed(1)+'s;--d:-'+(r()*30).toFixed(1)+'s;--dx:'+(80+r()*160).toFixed(0)+'px;--dy:-'+(30+r()*90).toFixed(0)+'px"></i>';}
   hero.insertAdjacentHTML('afterbegin',d+'</div>');

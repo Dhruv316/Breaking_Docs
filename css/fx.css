@@ -55,3 +55,6 @@ a.tile.tilt{transition:transform .18s var(--ease),border-color .18s,box-shadow .
 .amb--embers .ap{border-radius:50%;background:radial-gradient(circle,#ffd36a,#ff6a1a 60%,transparent 72%);--k:ambRise}
 .amb--embers .amb-glow{top:auto;height:38%;background:linear-gradient(0deg,#ff6a1a66,#ff6a1a22 45%,transparent);animation:ambFlick 4.5s ease-in-out infinite}
 @media(prefers-reduced-motion:reduce){.amb,.tk-track{display:none}.fx-px>.scene{translate:none!important}}
+
+/* visibility-governor: pause looping animations on off-screen hosts */
+.is-off,.is-off *,.is-off *::before,.is-off *::after{animation-play-state:paused!important}
