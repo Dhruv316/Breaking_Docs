@@ -114,6 +114,5 @@ privacy:{title:'Privacy',heading:'Privacy',sub:'Plain words. No fine print.',bac
   {h:'Public libraries and fonts',p:'To do the work, your browser fetches helper libraries and fonts from public CDNs. Those requests carry no part of your files.'},
   {h:'Your sound preference',p:'If you turn the sound on or off, that choice is remembered in this browser only. It is never sent anywhere.'}]},
 share:{button:'Share your batch',title:'Your Cook Report',aria:'Cook Report card',preview:'Preview of your Cook Report card',download:'Download PNG',share:'Share',close:'Close',building:'Cooking the card…',fail:'Couldn\'t build the card in this browser.',shared:'Shared.',
- file:'breaking-docs-cook-report.png',brand:'breaking docs',pagesWord:'{n} PAGES',pageWord:'1 PAGE',shareTitle:'My Cook Report',shareText:'Cooked with Breaking Docs.'},
-titlecards:{episode:'EPISODE {n}',season:'S01',tools:'The Product Line',how:'The Process',cast:'The Crew',faq:'Cross-Examination',chip:'S01 · E{n}'}
+ file:'breaking-docs-cook-report.png',brand:'breaking docs',pagesWord:'{n} PAGES',pageWord:'1 PAGE',shareTitle:'My Cook Report',shareText:'Cooked with Breaking Docs.'}
 });
