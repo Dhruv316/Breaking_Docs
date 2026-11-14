@@ -97,18 +97,21 @@ export const introPlayedMs=()=>intro&&!intro.fading?intro.a.currentTime*1000:-1;
 export function stopIntro(){try{const me=intro;if(!me||me.fading)return;me.fading=true;const n=T();me.g.gain.cancelScheduledValues(n);me.g.gain.setValueAtTime(Math.max(me.g.gain.value,.0001),n);me.g.gain.linearRampToValueAtTime(.0001,n+.6);
  setTimeout(()=>{try{me.a.pause();me.src.disconnect();me.g.disconnect();}catch{}if(intro===me)intro=null;},680);}catch{}}
 
-/** Wires the title theme: starts it from a click on "Start cooking", a tool tile/link or a navbar Tools link, remembers the position for the next
- *  page, and resumes it there (only after an in-site link click, never on reload / back / typed URL). */
+/** Wires the title theme: plays it ONCE per tab session on the first interaction (pointerdown, keydown except Escape, touchend) on any page,
+ *  remembers the start time for the next page, and resumes it there at the matching offset (only after an in-site navigation). */
 export function initIntro(url){
- const TOOLS=/(?:^|\/)(image-to-pdf|ppt-to-pdf|compress-pdf|merge-pdf|split-pdf|remove-pages)\.html(?:[?#]|$)/;
- const wants=el=>{const a=el.closest('a[href]');if(!a)return false;const h=a.getAttribute('href')||'';
-  return TOOLS.test(h)||(!!a.closest('.nav')&&/#tools$/.test(h))||(a.matches('#hero a.btn')&&h==='#tools');};
- document.addEventListener('click',e=>{try{
-  if(e.defaultPrevented||e.button!==0||e.ctrlKey||e.metaKey||e.shiftKey||e.altKey||!e.target.closest||!wants(e.target))return;
-  const played=introPlayedMs();
-  if(played<0)playIntro(url,0);                         // the click is the user gesture
-  saveIntro(Date.now()-Math.max(0,played));}catch{}},true);
+ const FKEY='bd.intro.played';let flagged=false;
+ try{flagged=!!sessionStorage.getItem(FKEY);}catch{}
+ if(!flagged){
+  const kinds=['pointerdown','keydown','touchend'];let busy=false;
+  const off=()=>kinds.forEach(k=>removeEventListener(k,first,true));
+  async function first(e){try{
+   if(busy||(e.type==='keydown'&&e.key==='Escape'))return;busy=true;
+   const ok=await playIntro(url,0);
+   if(ok){off();try{sessionStorage.setItem(FKEY,'1');}catch{}saveIntro(Date.now());}}catch{}busy=false;}
+  kinds.forEach(k=>addEventListener(k,first,{capture:true,passive:true}));}
  const resume=async()=>{try{
+  if(!flagged)return;
   const st=JSON.parse(sessionStorage.getItem(ISKEY)||'null');if(!st)return;
   const left=()=>Date.now()-st.startedAt;
   if(!(left()>=0&&left()<TRACK_MS-700)){clearIntro();return;}
